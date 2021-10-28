@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+{% for portfolios in portfolio_user %}
+
+    {% if portfolios.is_main == True %}
+
+    <a href="{% url 'portfolios:open' portfolios.id %}">(main){{portfolios.name}}</a>
+
+    {% else %}
+
+    <a href="{% url 'portfolios:open' portfolios.id %}">{{portfolios.name}}</a>
+
+    {% endif %}
+
+{% endfor %}
+
+<a href="{% url 'portfolios:create' %}" class="btn btn-primary">생성하기</a>
+
+{% endblock content %}
