@@ -6,42 +6,38 @@ from Untitled.portfolios.models import Portfolio
 
 class PortfoliosAccount(models.Model):
 
-    account_code1 = models.IntegerField()
+    portfolio = models.ForeignKey(to=Portfolio, on_delete=models.RESTRICT)
 
-    account_code2 = models.IntegerField()
+    account_code = models.IntegerField()
 
-    account_code3 = models.IntegerField()
-
-    account_code4 = models.IntegerField()
-
-    name1 = models.CharField()
-
-    name2 = models.CharField()
-
-    name3 = models.CharField()
+    name = models.CharField()
 
     nickname = models.CharField()
-
-    portfolio = models.ForeignKey(to=Portfolio, on_delete=models.RESTRICT)
 
 
 class AccountsAsset(models.Model):
 
-    
-
     account = models.ForeignKey(to=PortfoliosAccount, on_delete=models.RESTRICT)
 
+    asset_code = models.IntegerField()
+
+    var = models.IntegerField()
+
+    amount = models.DecimalField(max_digits=100, decimal_places=var)
 
 
-class Action(models.Model):
+
+class AssetsAction(models.Model):
+
+    action_code = models.IntegerField()
 
     asset_buy = models.ForeignKey(to=AccountsAsset, on_delete=models.RESTRICT)
     
-    amount_buy = models.DecimalField(max_digits=50, decimal_places=2)
+    amount_buy = models.DecimalField(max_digits=100, decimal_places=asset_buy.var)
 
     asset_sell = models.ForeignKey(to=AccountsAsset, on_delete=models.RESTRICT)
 
-    amount_sell = models.DecimalField(max_digits=50, decimal_places=2)
+    amount_sell = models.DecimalField(max_digits=100, decimal_places=asset_sell.var)
 
     created_at = models.DateTimeField(auto_now_add=True)
     
