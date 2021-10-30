@@ -36,8 +36,8 @@ class AccountsAsset(models.Model):
     # asset 속성
     attribute = models.CharField(max_length=100)
     # asset 수량
-    # amount = models.DecimalField(max_digits=100, decimal_places=format.amount_decimal_places)
-    amount = models.DecimalField(max_digits=100, decimal_places=2)
+    decimal_places = getattr(format, 'amount_decimal_places', 0)
+    amount = models.DecimalField(max_digits=100, decimal_places=decimal_places)
 
 
 class AssetsAction(models.Model):
@@ -50,9 +50,10 @@ class AssetsAction(models.Model):
     asset_buy = models.ForeignKey(to=AccountsAsset, on_delete=models.RESTRICT, related_name='action_buy')
     asset_sell = models.ForeignKey(to=AccountsAsset, on_delete=models.RESTRICT, related_name='action_sell')
     # buy/sell 수량
-    # amount_buy = models.DecimalField(max_digits=100, decimal_places=asset_buy.format.amount_decimal_places)
-    # amount_sell = models.DecimalField(max_digits=100, decimal_places=asset_sell.format.amount_decimal_places)
-    amount_buy = models.DecimalField(max_digits=100, decimal_places=2)
-    amount_sell = models.DecimalField(max_digits=100, decimal_places=2)
+    decimal_places_buy = getattr(asset_buy, 'decimal_places', 0)
+    decimal_places_sell = getattr(asset_sell, 'decimal_places', 0)
+    amount_buy = models.DecimalField(max_digits=100, decimal_places=decimal_places_buy)
+    amount_sell = models.DecimalField(max_digits=100, decimal_places=decimal_places_sell)
     # 라벨링
     rabel = models.CharField(max_length=100)
+

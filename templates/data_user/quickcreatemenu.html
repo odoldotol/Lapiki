@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+<h1>빠른생성메뉴</h1>
+
+<hr>
+<br>
+<br>
+<a href="{% url 'data_user:quickcreate1' id_portfolio %}" class="btn btn-primary">주식/ETF(상장금융상품)</a>
+<br>
+<br>
+<a href="{% url 'data_user:quickcreate1' id_portfolio %}" class="btn btn-primary">암호화폐</a>
+<br>
+<br>
+<a href="{% url 'data_user:quickcreate1' id_portfolio %}" class="btn btn-primary">현금/현금성자산(자유입출예금)</a>
+<br>
+<br>
+<a href="{% url 'data_user:quickcreate1' id_portfolio %}" class="btn btn-primary">예금/적금</a>
+<br>
+<br>
+<a href="{% url 'data_user:quickcreate1' id_portfolio %}" class="btn btn-primary">퇴직금/연금/보험</a>
+<br>
+<br>
+<hr>
+<a href="{% url 'portfolios:open' id_portfolio %}" class="btn btn-primary">빠른생성종료</a>
+
+{% endblock content %}

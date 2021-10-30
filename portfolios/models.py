@@ -2,7 +2,6 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-
 class Portfolio(models.Model):
     # 유저계정 종속
     user = models.ForeignKey(to=User, on_delete=models.RESTRICT)
@@ -17,6 +16,8 @@ class Portfolio(models.Model):
     )
     # 메인포트 여부
     is_main = models.BooleanField(default=False)
+    # 기본통화 설정
+    Currency = models.CharField(max_length=10, default="KRW")
 
 
 class AccountFormat(models.Model):

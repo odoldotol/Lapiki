@@ -2,6 +2,10 @@ from django.shortcuts import redirect, render
 
 from portfolios.models import Portfolio
 
+from django.conf import settings
+
+key_currency = getattr(settings, 'KEY_CURRENCY', "USD")
+
 
 def entry(request):
     # 로그인 되어있으면 메인포트가 있는지보고 메인포트로 보내
@@ -31,3 +35,5 @@ def certify(request_user, portfolio_user):
         return True
     else:
         return False
+
+

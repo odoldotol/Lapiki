@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+<a href="{% url 'data_user:quickcreatemenu' id_portfolio %}">빠른생성메뉴로가기</a>
+
+<hr>
+
+<br>
+
+<form method="GET" action="">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">select account</label>
+    <select class="form-control" id="exampleFormControlSelect1">
+    {% if portfoliosaccounts %}
+        {% for account in portfoliosaccounts %}
+        <option>{{account.nickname}}</option>
+        {% endfor %}
+    {% else %}
+        <option>계좌 없음 / 계좌를 만들어주세요</option>
+    {% endif %}
+    </select>
+  </div>
+</form>
+
+<br>
+
+<a href="{% url 'data_user:createaccount' id_portfolio %}" class="btn btn-primary">새로운 account 만들기</a>
+
+<hr>
+
+{% endblock content %}
