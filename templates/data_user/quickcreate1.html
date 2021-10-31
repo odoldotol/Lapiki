@@ -22,14 +22,11 @@
   <div class="form-group">
     <label for="">select account</label>
     <select name='account' required class="form-control" id="">
-    {% if accounts %}
-        {% for account in accounts %}
-        <option value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
-        {% endfor %}
-    {% else %}
-        <option>계좌 없음 / 계좌를 등록해주세요</option>
-    {% endif %}
+      {% for account in accounts %}
+      <option value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
+      {% endfor %}
     </select>
+    계좌가 없으면 등록해주세요
     <a href="{% url 'data_user:register_account' id_portfolio kind %}" class="btn btn-primary">새로운 account 등록하러 가기</a>
   </div>
 

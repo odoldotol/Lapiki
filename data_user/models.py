@@ -111,28 +111,3 @@ class AssetsAction(models.Model):
         choices=action_rabels,
         default=DEFAULT,
     )
-
-
-class TickerSymbol(models.Model):
-    ticker = models.CharField(max_length=50, unique=True)
-
-    symbol = models.CharField(max_length=50, unique=True)
-
-    shortName = models.CharField(max_length=50)
-    longName = models.CharField(max_length=50)
-
-    currency = models.CharField(max_length=50)
-    financialCurrency = models.CharField(max_length=50)
-
-    country = models.CharField(max_length=50)
-    market = models.CharField(max_length=50)
-    exchange = models.CharField(max_length=50)
-
-    marketCap = models.CharField(max_length=50)
-    trailingPE = models.CharField(max_length=50)
-    dividendYield = models.CharField(max_length=50)
-
-    trailingEps = models.CharField(max_length=50)
-    beta = models.CharField(max_length=50)
-
-    currentPrice = models.CharField(max_length=50)

@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from django.contrib.auth.decorators import login_required
 
-from data_user.models import PortfoliosAccount, FinancialAccountsTitle, TickerSymbol
+from data_market.models import TickerSymbol
+from data_user.models import PortfoliosAccount, FinancialAccountsTitle
 from portfolios.models import Portfolio
 
 from config.views import certify
