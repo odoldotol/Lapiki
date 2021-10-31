@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render 
+from django.shortcuts import get_object_or_404, redirect, render 
 
 from portfolios.models import Portfolio
 
@@ -36,4 +36,8 @@ def certify(request_user, portfolio_user):
     else:
         return False
 
-
+def certification(request, id):
+    portfolio = get_object_or_404(Portfolio, id=id)
+    certi = certify(request.user, portfolio.user)
+    if certi == False:
+        return redirect('accounts:logout')

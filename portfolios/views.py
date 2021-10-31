@@ -28,7 +28,7 @@ def create(request):
     if len(main_portfolio) == 0:
         portfolio.is_main = True
         portfolio.save()
-    return redirect('data_user:quickcreatemenu', portfolio.id)
+    return redirect('data_user:quickcreate_menu', portfolio.id)
 
 @login_required
 def open(request, id):

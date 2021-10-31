@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-from .models import Portfolio, AccountFormat, AssetFormat
+from .models import Portfolio
 
 admin.site.register(Portfolio)
-admin.site.register(AccountFormat)
-admin.site.register(AssetFormat)

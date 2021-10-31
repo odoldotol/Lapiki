@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+<a href="{% url 'data_user:quickcreate_menu' id_portfolio %}">빠른생성메뉴로가기</a>
+
+<hr>
+
+<br>
+
+<form method="POST" action="">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="">select title</label>
+    <select name="title" class="form-control" id="">
+    {% for title in titles %}
+    <option>{{title.title}}</option>
+    {% endfor %}
+    <option>기타</option>
+    </select>
+  </div>
+
+  <div >
+    <label for="">nickname</label>
+    <input type="text" name="nickname" value="">
+  </div>
+
+  <input type="submit" value="register">
+</form>
+
+<br>
+
+<hr>
+
+{% endblock content %}
