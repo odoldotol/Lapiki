@@ -7,6 +7,10 @@
 
 {% block content %}
 
+{% if error %}
+{{ error }}
+{% endif %}
+
 <a href="{% url 'data_user:quickcreate_menu' id_portfolio %}">빠른생성메뉴로가기</a>
 
 <hr>
@@ -14,23 +18,38 @@
 <br>
 
 <form method="POST" action="">
+  {% csrf_token %}
   <div class="form-group">
-    <label for="exampleFormControlSelect1">select account</label>
-    <select class="form-control" id="exampleFormControlSelect1">
+    <label for="">select account</label>
+    <select name='account' required class="form-control" id="">
     {% if accounts %}
         {% for account in accounts %}
-        <option>{{account.title}} {{account.nickname}}</option>
+        <option value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
         {% endfor %}
     {% else %}
         <option>계좌 없음 / 계좌를 등록해주세요</option>
     {% endif %}
     </select>
+    <a href="{% url 'data_user:register_account' id_portfolio kind %}" class="btn btn-primary">새로운 account 등록하러 가기</a>
   </div>
+
+  <div>
+    {% if error %}
+    {{ error }}
+    {% endif %}
+    <label for="">ticker symbol을 정확히 입력하세요</label>
+    <input type="text" name="code" class="form-control" list="symbols" id="">
+    <datalist id="symbols">
+    {% for tickersymbol in tickersymbols %}
+    <option>{{tickersymbol.symbol}}</option>
+    {% endfor %}
+    </datalist>
+  </div>
+
+  <input type="submit" value="register">
 </form>
 
 <br>
-
-<a href="{% url 'data_user:register_account' id_portfolio kind %}" class="btn btn-primary">새로운 account 등록하러 가기</a>
 
 <hr>
 

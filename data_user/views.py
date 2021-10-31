@@ -2,10 +2,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from django.contrib.auth.decorators import login_required
 
-from data_user.models import PortfoliosAccount, FinancialAccountsTitle
+from data_user.models import PortfoliosAccount, FinancialAccountsTitle, TickerSymbol
 from portfolios.models import Portfolio
 
 from config.views import certify
+
+import yfinance as yf
 
 
 @login_required
@@ -30,16 +32,62 @@ def quickcreate1(request, id):
         return redirect('accounts:logout')
     # 메써드가 포스트면
     if request.method == "POST":
-        pass
+        # code 받아서 symbol모델에서 찾아보기
+        ticker = request.POST['code']
+        symbol = TickerSymbol.objects.filter(ticker=ticker)
+        # 없으면
+        if len(symbol) == 0:
+            # 존재하는 symbol이라 가정하고 진행
+            try:
+                # symbol모델로 데이터만들기
+                ticker_check = yf.Ticker(ticker)
+                info_check = ticker_check.info
+                TickerSymbol.objects.create(
+                    ticker=ticker,
+                    symbol=info_check['symbol'],
+                    shortName=info_check['shortName'],
+                    longName=info_check['longName'],
+                    currency=info_check['currency'],
+                    financialCurrency=info_check['financialCurrency'],
+                    country=info_check['country'],
+                    market=info_check['market'],
+                    exchange=info_check['exchange'],
+                    marketCap=info_check['marketCap'],
+                    trailingPE=info_check['trailingPE'],
+                    dividendYield=info_check['dividendYield'],
+                    trailingEps=info_check['trailingEps'],
+                    beta=info_check['beta'],
+                    currentPrice=info_check['currentPrice']
+                )
+            # 만약에 오류뜨면
+            except:
+                # 오류 메세지를 context에 추가하여 템플릿 랜더하기
+                # 포트폴리오 종속 어카운트와 포트id를 context에 담기
+                accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
+                tickersymbols = TickerSymbol.objects.all()
+                context = {
+                    'id_portfolio' : id,
+                    'accounts' : accounts,
+                    'kind' : 'a',
+                    'tickersymbols' : tickersymbols,
+                    'error': "symbol을 찾을수 없습니다."
+                }
+                # 작성 템플릿 랜더
+                return render(request, 'data_user/quickcreate1.html', context)
+        # 있거나 데이터 만들어왔으면 생성진행
+        return redirect('home')
+    # 머써드가 포스트가 아니면
     else:
         # 포트폴리오 종속 어카운트와 포트id를 context에 담기
         accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
+        tickersymbols = TickerSymbol.objects.all()
         context = {
             'id_portfolio' : id,
             'accounts' : accounts,
-            'kind' : 'a'
+            'kind' : 'a',
+            'tickersymbols' : tickersymbols,
         }
-        # 머써드가 포스트가 아니면 작성 템플릿 랜더
+        # 작성 템플릿 랜더
         return render(request, 'data_user/quickcreate1.html', context)
 
 

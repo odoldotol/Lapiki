@@ -16,17 +16,17 @@
 <form method="POST" action="">
   {% csrf_token %}
   <div class="form-group">
-    <label for="">select title</label>
-    <select name="title" class="form-control" id="">
+    <label for="">없으면 직접 입력해주세요. 리스트에 포함시키겠습니다.</label>
+    <input type="text" name="title" class="form-control" list="titles" id="">
+    <datalist id="titles">
     {% for title in titles %}
     <option>{{title.title}}</option>
     {% endfor %}
-    <option>기타</option>
-    </select>
+    </datalist>
   </div>
 
   <div >
-    <label for="">nickname</label>
+    <label for="">이 account의 별칭을 지어주세요</label><br>
     <input type="text" name="nickname" value="">
   </div>
 
