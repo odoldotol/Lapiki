@@ -1,21 +1,21 @@
+from re import A
 from django.shortcuts import get_object_or_404, redirect, render
 
 from django.contrib.auth.decorators import login_required
 
 from data_market.models import TickerSymbol
-from data_user.models import PortfoliosAccount, FinancialAccountsTitle
+from .models import AccountsAsset, AssetsAction, PortfoliosAccount, FinancialAccountsTitle, AssetFormat
 from portfolios.models import Portfolio
 
-from config.views import certify
-
-import yfinance as yf
+from config.views import certification
+from data_market.views import data_tickersymbol
 
 
 @login_required
 def quickcreate_menu(request, id):
-    # 요청한 유저와 접근하려는 포트의 유저id가 같은지 증명
-    portfolio = get_object_or_404(Portfolio, id=id)
-    certi = certify(request.user, portfolio.user)
+    # 증명
+    portfolio = get_object_or_404(Portfolio, id=id, is_deleted=False)
+    certi = certification(request, portfolio)
     if certi == False:
         return redirect('accounts:logout')
     # 포트id 가지고 랜더
@@ -26,42 +26,23 @@ def quickcreate_menu(request, id):
 
 @login_required
 def quickcreate1(request, id):
-    # 요청한 유저와 접근하려는 포트의 유저id가 같은지 증명
-    portfolio = get_object_or_404(Portfolio, id=id)
-    certi = certify(request.user, portfolio.user)
+    # 증명
+    portfolio = get_object_or_404(Portfolio, id=id, is_deleted=False)
+    certi = certification(request, portfolio)
     if certi == False:
         return redirect('accounts:logout')
-    # 메써드가 포스트면
-    if request.method == "POST":
+    # 메써드가 포스트이고 작성이 완료가 안됬으면
+    if request.method == "POST" and request.POST['complete'] == "n":
         # code 받아서 symbol모델에서 찾아보기
-        ticker = request.POST['code']
-        symbol = TickerSymbol.objects.filter(ticker=ticker)
+        code = request.POST['code']
+        code = code.lower()
+        symbol = TickerSymbol.objects.filter(ticker=code)
         # 없으면
         if len(symbol) == 0:
-            # 존재하는 symbol이라 가정하고 진행
-            try:
-                # symbol모델로 데이터만들기
-                ticker_check = yf.Ticker(ticker)
-                info_check = ticker_check.info
-                TickerSymbol.objects.create(
-                    ticker=ticker,
-                    symbol=info_check['symbol'],
-                    shortName=info_check['shortName'],
-                    longName=info_check['longName'],
-                    currency=info_check['currency'],
-                    financialCurrency=info_check['financialCurrency'],
-                    country=info_check['country'],
-                    market=info_check['market'],
-                    exchange=info_check['exchange'],
-                    marketCap=info_check['marketCap'],
-                    trailingPE=info_check['trailingPE'],
-                    dividendYield=info_check['dividendYield'],
-                    trailingEps=info_check['trailingEps'],
-                    beta=info_check['beta'],
-                    currentPrice=info_check['currentPrice']
-                )
-            # 만약에 오류뜨면
-            except:
+            # 새로 만들어봐!
+            data_symbol = data_tickersymbol(code)
+            # 못만들어왔으면
+            if data_symbol == False:
                 # 오류 메세지를 context에 추가하여 템플릿 랜더하기
                 # 포트폴리오 종속 어카운트와 포트id를 context에 담기
                 accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
@@ -75,7 +56,79 @@ def quickcreate1(request, id):
                 }
                 # 작성 템플릿 랜더
                 return render(request, 'data_user/quickcreate1.html', context)
-        # 있거나 데이터 만들어왔으면 생성진행
+        ##### 있거나 만들어왔으면 생성할 모델들의 재료들을 기록해두고 다시 랜더하기
+        list_for_create = []
+        try:
+            len_list = int(request.POST['len_list'])
+            for i in range(len_list):
+                account_id = request.POST[f'account_id{i}']
+                ticker = request.POST[f'ticker{i}']
+                amount = request.POST[f'amount{i}']
+                dic = {}
+                dic['account_id'] = account_id
+                dic['ticker'] = ticker
+                dic['amount'] = amount
+                list_for_create = list_for_create + [dic]
+        except:
+            pass
+        account_id = request.POST['account']
+        selected_maker = request.POST['account']
+        amount = request.POST['amount']
+        dic = {}
+        dic['account_id'] = account_id
+        dic['ticker'] = code
+        dic['amount'] = amount
+        list_for_create = list_for_create + [dic]
+        len_list = len(list_for_create)
+        ##### context 만들고 랜더
+        ### context 만들기
+        # 포트폴리오 종속 어카운트와 포트id를 context에 담기
+        accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
+        tickersymbols = TickerSymbol.objects.all()
+        context = {
+            'id_portfolio' : id,
+            'accounts' : accounts,
+            'kind' : 'a',
+            'tickersymbols' : tickersymbols,
+            'len_list' : len_list,
+            'list_for_create' : list_for_create,
+            'selected_maker' : selected_maker,
+        }
+        ### 랜더
+        return render(request, 'data_user/quickcreate1.html', context)
+    # 메써드가 포스트 이고 작성이 완료됬으면 asset 과 action 만들기
+    elif request.method == "POST" and request.POST['complete'] == "y":
+        len_list = int(request.POST['len_list'])
+        for i in range(len_list):
+            account_id = request.POST[f'account_id{i}']
+            ticker = request.POST[f'ticker{i}']
+            amount = request.POST[f'amount{i}']
+            # symbol모델에서 찾아오기
+            tickersymbol = get_object_or_404(TickerSymbol, ticker=ticker)
+            ##### asset 만들기
+            account = get_object_or_404(PortfoliosAccount, id=account_id)
+            code = tickersymbol.symbol
+            name = tickersymbol.longName
+            format = get_object_or_404(AssetFormat, title='주식')
+            # 계좌에 동일 asset이 이미 있는지 확인
+            check = AccountsAsset.objects.filter(account=account, format=format, code=code)
+            # 없을떄만 생성
+            if len(check) == 0:
+                AccountsAsset.objects.create(
+                    account=account,
+                    format=format,
+                    code=code,
+                    name=name,
+                )
+            # action 만들기
+            asset = get_object_or_404(AccountsAsset, account=account, format=format, code=code)
+            amount_buy = amount
+            AssetsAction.objects.create(
+                asset_buy=asset,
+                amount_buy=amount_buy,
+                rabel='IO'
+            )
+        # 
         return redirect('home')
     # 머써드가 포스트가 아니면
     else:
@@ -93,9 +146,9 @@ def quickcreate1(request, id):
 
 
 def register_account(request, id, kind):
-    # 요청한 유저와 접근하려는 포트의 유저id가 같은지 증명
-    portfolio = get_object_or_404(Portfolio, id=id)
-    certi = certify(request.user, portfolio.user)
+    # 증명
+    portfolio = get_object_or_404(Portfolio, id=id, is_deleted=False)
+    certi = certification(request, portfolio)
     if certi == False:
         return redirect('accounts:logout')
     # 메써드가 포스트면

@@ -7,20 +7,28 @@
 
 {% block content %}
 
+<div class="card-group">
 {% for portfolios in portfolio_user %}
-
-    {% if portfolios.is_main == True %}
-
-    <a href="{% url 'portfolios:open' portfolios.id %}">(main){{portfolios.name}}</a>
-
-    {% else %}
-
-    <a href="{% url 'portfolios:open' portfolios.id %}">{{portfolios.name}}</a>
-
-    {% endif %}
-
+    <div class="card">
+        <img class="card-img-top" src="..." alt="Card image cap">
+        {% if portfolios.is_main == True %}
+        <a href="{% url 'portfolios:open' portfolios.id %}">(main){{portfolios.name}}</a>
+        {% else %}
+        <a href="{% url 'portfolios:open' portfolios.id %}">{{portfolios.name}}</a>
+        {% endif %}
+        <div class="card-body">
+            <a href="{% url 'data_user:quickcreate_menu' portfolios.id %}">Quick Create</a>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'portfolios:delete' portfolios.id %}">삭제하기</a>
+        </div>
+    </div>
 {% endfor %}
-
-<a href="{% url 'portfolios:create' %}" class="btn btn-primary">생성하기</a>
+    <div class="card">
+        <div class="card-body">
+            <a href="{% url 'portfolios:create' %}" class="btn btn-primary">생성하기</a>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

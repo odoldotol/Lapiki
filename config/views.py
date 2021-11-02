@@ -4,6 +4,7 @@ from portfolios.models import Portfolio
 
 from django.conf import settings
 
+# 기준통화 세팅
 key_currency = getattr(settings, 'KEY_CURRENCY', "USD")
 
 
@@ -26,18 +27,9 @@ def home(request):
 
 
 
-
-
-
-
-def certify(request_user, portfolio_user):
-    if request_user == portfolio_user:
+# 요청한 유저와 포트의 유저가 같은지 증명
+def certification(request, portfolio):
+    if request.user == portfolio.user:
         return True
     else:
         return False
-
-def certification(request, id):
-    portfolio = get_object_or_404(Portfolio, id=id)
-    certi = certify(request.user, portfolio.user)
-    if certi == False:
-        return redirect('accounts:logout')

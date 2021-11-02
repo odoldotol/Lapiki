@@ -21,3 +21,5 @@ class Portfolio(models.Model):
     main_currency = models.CharField(max_length=10, default="KRW")
     is_sub_currency = models.BooleanField(default=False)
     sub_currency = models.CharField(max_length=10, default="USD")
+    # 삭제 여부
+    is_deleted = models.BooleanField(default=False)
