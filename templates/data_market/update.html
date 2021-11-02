@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+<form method="POST" action="">
+{% csrf_token %}
+    <input type="hidden" name="option" value="a">
+    <input type="text" name="ticker" class="form-control" id="">
+    <input type="submit" value="update">
+</form>
+
+<form method="POST" action="">
+{% csrf_token %}
+    <input type="hidden" name="option" value="b">
+    <input type="text" name="ticker" class="form-control" id="">
+    <input type="submit" value="update">
+</form>
+
+{{result}}!!!
+
+{% endblock content %}

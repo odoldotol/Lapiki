@@ -63,20 +63,25 @@ def quickcreate1(request, id):
             for i in range(len_list):
                 account_id = request.POST[f'account_id{i}']
                 ticker = request.POST[f'ticker{i}']
+                shortName = request.POST[f'shortName{i}']
                 amount = request.POST[f'amount{i}']
                 dic = {}
                 dic['account_id'] = account_id
                 dic['ticker'] = ticker
+                dic['shortName'] = shortName
                 dic['amount'] = amount
                 list_for_create = list_for_create + [dic]
         except:
             pass
         account_id = request.POST['account']
         selected_maker = request.POST['account']
+        tickersymbol = get_object_or_404(TickerSymbol, ticker=code)
+        shortName = tickersymbol.shortName
         amount = request.POST['amount']
         dic = {}
         dic['account_id'] = account_id
         dic['ticker'] = code
+        dic['shortName'] = shortName
         dic['amount'] = amount
         list_for_create = list_for_create + [dic]
         len_list = len(list_for_create)
@@ -129,7 +134,7 @@ def quickcreate1(request, id):
                 rabel='IO'
             )
         # 
-        return redirect('home')
+        return redirect('data_user:quickcreate_menu', id)
     # 머써드가 포스트가 아니면
     else:
         # 포트폴리오 종속 어카운트와 포트id를 context에 담기

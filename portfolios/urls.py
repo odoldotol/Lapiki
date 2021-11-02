@@ -10,5 +10,4 @@ urlpatterns = [
     path('create/', create, name='create'),
     path('delete/<int:id>/', delete, name='delete'),
     path('open/<int:id>/', open, name='open'),
-
 ]
