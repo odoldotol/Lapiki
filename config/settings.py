@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'data_portfolio',
     'data_user',
     'data_market',
+    'data_support',
     'visualizing',
 ]
 

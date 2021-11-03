@@ -1,11 +1,11 @@
-from re import A
 from django.shortcuts import get_object_or_404, redirect, render
 
 from django.contrib.auth.decorators import login_required
 
 from data_market.models import TickerSymbol
-from .models import AccountsAsset, AssetsAction, PortfoliosAccount, FinancialAccountsTitle, AssetFormat
+from .models import AccountsAsset, AssetsAction, PortfoliosAccount
 from portfolios.models import Portfolio
+from data_support.models import AssetFormat, FinancialAccountsTitle
 
 from config.views import certification
 from data_market.views import data_tickersymbol
@@ -115,7 +115,7 @@ def quickcreate1(request, id):
             code = tickersymbol.symbol
             name = tickersymbol.longName
             format = get_object_or_404(AssetFormat, title='주식')
-            # 계좌에 동일 asset이 이미 있는지 확인
+            # 계좌에 동일역할 asset이 이미 있는지 확인
             check = AccountsAsset.objects.filter(account=account, format=format, code=code)
             # 없을떄만 생성
             if len(check) == 0:
@@ -124,6 +124,7 @@ def quickcreate1(request, id):
                     format=format,
                     code=code,
                     name=name,
+                    portfolio=portfolio
                 )
             # action 만들기
             asset = get_object_or_404(AccountsAsset, account=account, format=format, code=code)
@@ -131,7 +132,9 @@ def quickcreate1(request, id):
             AssetsAction.objects.create(
                 asset_buy=asset,
                 amount_buy=amount_buy,
-                rabel='IO'
+                rabel='IO',
+                account_buy=account,
+                portfolio=portfolio
             )
         # 
         return redirect('data_user:quickcreate_menu', id)

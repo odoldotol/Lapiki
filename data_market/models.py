@@ -3,8 +3,8 @@ from django.db import models
 class TickerSymbol(models.Model):
     ticker = models.CharField(max_length=50, unique=True)
     # 생성 및 마지막 수정 일시
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    last_modified_at = models.DateTimeField(auto_now=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified_at = models.DateTimeField(auto_now=True)
 
     symbol = models.CharField(max_length=50, unique=True)
 

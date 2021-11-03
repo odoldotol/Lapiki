@@ -1,14 +1,17 @@
 from django.db import models
 
+from data_support.models import AssetFormat
 from portfolios.models import Portfolio
 
 
 class PortfoliosAccount(models.Model):
     # 특정 Portfolio 종속
-    portfolio = models.ForeignKey(to=Portfolio, on_delete=models.RESTRICT)
+    portfolio = models.ForeignKey(to=Portfolio, on_delete=models.PROTECT)
     # 생성 및 마지막 수정 일시
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
+    # 최근 엑세시 일시
+    last_access = models.DateTimeField(auto_now=True)
     # 필터
     a = models.BooleanField(default=False, help_text="stocks, etf,,, exchange traded financial instruments")
     b = models.BooleanField(default=False, help_text="crypto")
@@ -26,38 +29,22 @@ class PortfoliosAccount(models.Model):
     # 유저가 기입한 주석
     remark = models.TextField()
 
-# 실존하는 금융어카운트 타이틀 구축은 마켓에서 가져오기보다는 유저에게 받아서 서버에서 관리한다. 우리 서비스에서는 절대로 중요해지면 안되는 영역, 최소화가 목표인 영역.
-class FinancialAccountsTitle(models.Model):
-    # account 에 배정해줄 타이틀
-    title = models.CharField(max_length=30)
-    # 필터
-    a = models.BooleanField(default=False, help_text="stocks, etf,,, exchange traded financial instruments")
-    b = models.BooleanField(default=False, help_text="crypto")
-    c = models.BooleanField(default=False, help_text="cash")
-    s = models.BooleanField(default=False, help_text="savings")
-    p = models.BooleanField(default=False, help_text="pension, retire, insurance, annuity,,,")
-
-# 서비스가 커져감에 따라서 발전해야하는 모델. 세상의 모든 asset을 분류,단순화해서 이해하는 모델.
-class AssetFormat(models.Model):
-    # 생성 및 마지막 수정 일시
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_modified_at = models.DateTimeField(auto_now=True)
-    # 포멧이름
-    title = models.CharField(max_length=50)
-    # 수량 소숫점 이하 자릿수
-    amount_decimal_places = models.IntegerField(default=0)
 
 # !!! 이 모델은 절대로 유저가 직접 접근할 수 없어야 합니다 !!!
 class AccountsAsset(models.Model):
     # 특정 account 종속
-    account = models.ForeignKey(to=PortfoliosAccount, on_delete=models.RESTRICT)
+    account = models.ForeignKey(to=PortfoliosAccount, on_delete=models.PROTECT)
     # 포멧 종속
-    format = models.ForeignKey(to=AssetFormat, on_delete=models.RESTRICT)
+    format = models.ForeignKey(to=AssetFormat, on_delete=models.PROTECT)
     # 생성 및 마지막 수정 일시
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
-    # asset 코드(특정할 수 있는 고유한 이름)
+    # 최근 엑세시 일시
+    last_access = models.DateTimeField(auto_now=True)
+    # asset 코드(특정할 수 있는 고유한 코드)
     code = models.CharField(max_length=50)
+    # asset title(대표하는)
+    title = models.CharField(max_length=100)
     # asset 이름
     name = models.CharField(max_length=100)
     # asset 속성(필요한 asset에만 사용)
@@ -65,6 +52,8 @@ class AccountsAsset(models.Model):
     # asset 수량
     decimal_places = getattr(format, 'amount_decimal_places', 0)
     amount = models.DecimalField(max_digits=100, decimal_places=decimal_places, default=0)
+    # portfolio 종속
+    portfolio = models.ForeignKey(to=Portfolio, on_delete=models.PROTECT)
 
 
 DEFAULT = 'DF'
@@ -98,8 +87,8 @@ class AssetsAction(models.Model):
     # 실제 액션 일시
     action_time = models.DateTimeField(auto_now_add=True)
     # buy/sell asset 종속
-    asset_buy = models.ForeignKey(to=AccountsAsset, null=True, on_delete=models.RESTRICT, related_name='action_buy')
-    asset_sell = models.ForeignKey(to=AccountsAsset, null=True, on_delete=models.RESTRICT, related_name='action_sell')
+    asset_buy = models.ForeignKey(to=AccountsAsset, null=True, on_delete=models.PROTECT, related_name='action_asset_buy')
+    asset_sell = models.ForeignKey(to=AccountsAsset, null=True, on_delete=models.PROTECT, related_name='action_asset_sell')
     # buy/sell 수량
     decimal_places_buy = getattr(asset_buy, 'decimal_places', 0)
     decimal_places_sell = getattr(asset_sell, 'decimal_places', 0)
@@ -111,3 +100,8 @@ class AssetsAction(models.Model):
         choices=action_rabels,
         default=DEFAULT,
     )
+    # 특정 account 종속
+    account_buy = models.ForeignKey(to=PortfoliosAccount, null=True, on_delete=models.PROTECT, related_name='action_account_buy')
+    account_sell = models.ForeignKey(to=PortfoliosAccount, null=True, on_delete=models.PROTECT, related_name='action_account_sell')
+    # portfolio 종속
+    portfolio = models.ForeignKey(to=Portfolio, on_delete=models.PROTECT)
