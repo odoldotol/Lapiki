@@ -80,7 +80,7 @@
 <hr>
 {% regroup list_for_create|dictsort:"account_id" by account_id as account_list %}
 {% for account_id in account_list %}
-<div class="card" style="">
+<div class="card" style="max-width: 30rem;">
   <div class="card-header">
   {% for account in accounts %}
   {% if account.id|slugify == account_id.grouper %}
@@ -90,7 +90,10 @@
   </div>
   <ul class="list-group list-group-flush">
     {% for ticker in account_id.list %}
-    <li class="list-group-item">{{ticker.ticker|upper}} {{ticker.shortName}} {{ticker.amount}}</li>
+    <li class="list-group-item">{{ticker.ticker|upper}} 
+      <span>{{ticker.shortName}}</span> 
+      <span>{{ticker.amount}}</span>
+     </li>
     {% endfor %}
   </ul>
 </div>
@@ -112,7 +115,7 @@
   <a href="{% url 'data_user:quickcreate1' id_portfolio %}" class="btn btn-primary">reset</a>
 {% endif %}
 </form>
-
+<a href="{% url 'data_user:quickcreate_menu' id_portfolio %}">빠른생성메뉴로나가기</a>
 <br>
 
 <hr>

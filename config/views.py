@@ -2,16 +2,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from portfolios.models import Portfolio
 
-from django.conf import settings
-
-# 기준통화 세팅
-key_currency = getattr(settings, 'KEY_CURRENCY', "USD")
-
 
 def entry(request):
     # 로그인 되어있으면 메인포트가 있는지보고 메인포트로 보내
     if request.user.is_authenticated:
-        mainportfolio = Portfolio.objects.filter(user=request.user, is_main=True)
+        mainportfolio = Portfolio.objects.filter(user=request.user, is_main=True, is_deleted=False)
         if len(mainportfolio) == 1:
             id = mainportfolio[0].id
             return redirect('portfolios:open', id)

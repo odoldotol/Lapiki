@@ -20,7 +20,7 @@ class PortfoliosAccount(models.Model):
     p = models.BooleanField(default=False, help_text="pension, retire, insurance, annuity,,,")
     r = models.BooleanField(default=False, help_text="real estate")
     z = models.BooleanField(default=False, help_text="painting, goods etc")
-    # 서버가 정해주는 이름
+    # 대표이름
     title = models.CharField(max_length=30, default="")
     # account 오리지널 이름
     name = models.CharField(max_length=100)
@@ -30,12 +30,22 @@ class PortfoliosAccount(models.Model):
     remark = models.TextField()
 
 
+
+### 참고 ###
+# ## classi
+# a : 주식
+# b : 
+# c :
+classi_list = ['a']
+
 # !!! 이 모델은 절대로 유저가 직접 접근할 수 없어야 합니다 !!!
 class AccountsAsset(models.Model):
     # 특정 account 종속
     account = models.ForeignKey(to=PortfoliosAccount, on_delete=models.PROTECT)
     # 포멧 종속
     format = models.ForeignKey(to=AssetFormat, on_delete=models.PROTECT)
+    # dataportfolio 분류
+    classi = models.CharField(max_length=50)
     # 생성 및 마지막 수정 일시
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)

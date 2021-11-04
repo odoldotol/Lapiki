@@ -19,6 +19,8 @@ class Portfolio(models.Model):
     )
     # 메인포트 여부
     is_main = models.BooleanField(default=False)
+    # 첫 엑세스 여부
+    is_first = models.BooleanField(default=True)
     # 통화 설정
     main_currency = models.CharField(max_length=10, default="KRW")
     is_sub_currency = models.BooleanField(default=False)

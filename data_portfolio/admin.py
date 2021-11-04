@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import DataPortfolio, DataPortfolioStockthing
+
+admin.site.register(DataPortfolio)
+admin.site.register(DataPortfolioStockthing)

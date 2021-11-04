@@ -10,6 +10,7 @@
 <form method="POST" action="">
 {% csrf_token %}
     <input type="hidden" name="option" value="a">
+    <label for="">TickerSymbol 전체 업데이트하기</label>
     <input type="text" name="ticker" class="form-control" id="">
     <input type="submit" value="update">
 </form>
@@ -17,6 +18,15 @@
 <form method="POST" action="">
 {% csrf_token %}
     <input type="hidden" name="option" value="b">
+    <label for="">TickerSymbol 가격만 업데이트 하기(미완성)</label>
+    <input type="text" name="ticker" class="form-control" id="">
+    <input type="submit" value="update">
+</form>
+
+<form method="POST" action="">
+{% csrf_token %}
+    <input type="hidden" name="option" value="c">
+    <label for="">ExchangeRate 생성하기</label>
     <input type="text" name="ticker" class="form-control" id="">
     <input type="submit" value="update">
 </form>

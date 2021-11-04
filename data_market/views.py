@@ -1,43 +1,92 @@
 from django.shortcuts import render, get_object_or_404
 
-from .models import TickerSymbol
+from .models import TickerSymbol, ExchangeRate
 
 import yfinance as yf
 
 
-
-def data_tickersymbol(ticker):
-    # 존재하는 symbol이라 가정하고 진행
-    try:
-        # symbol모델로 데이터만들기
-        ticker_check = yf.Ticker(ticker)
-        info_check = ticker_check.info
-        tickersymbol = TickerSymbol.objects.create(
-            ticker=ticker,
-            symbol=info_check['symbol'],
-            shortName=info_check['shortName'],
-            longName=info_check['longName'],
-            currency=info_check['currency'],
-            financialCurrency=info_check['financialCurrency'],
-            country=info_check['country'],
-            market=info_check['market'],
-            exchange=info_check['exchange'],
-            marketCap=info_check['marketCap'],
-            dividendYield=info_check['dividendYield'],
-            trailingEps=info_check['trailingEps'],
-            beta=info_check['beta'],
-            currentPrice=info_check['currentPrice'],
-            previousClose=info_check['previousClose'],
-            regularMarketPreviousClose=info_check['regularMarketPreviousClose']
-        )
+def data_exchangerate(symbol):
+    ## symbol 로 환율 데이터 찾아서 있으면 트루 없으면 만들어서 트루 못만들면 폴스
+    symbol = symbol.upper()
+    exchange = ExchangeRate.objects.filter(symbol=symbol)
+    if len(exchange) == 1:
+        return True
+    elif len(exchange) == 0:
+    # 존재하는 symbol이라 가정하고 진행 (symbol ex> KRW=X)
         try:
-            tickersymbol.trailingPE=info_check['trailingPE']
-            tickersymbol.save()
+            # symbol모델로 데이터만들기
+            ticker_check = yf.Ticker(symbol)
+            info_check = ticker_check.info
+            ExchangeRate.objects.create(
+                symbol=info_check['symbol'],
+                shortName=info_check['shortName'],
+                currency=info_check['currency'],
+                regularMarketPrice=info_check['regularMarketPrice'],
+                previousClose=info_check['previousClose'],
+                regularMarketPreviousClose=info_check['regularMarketPreviousClose']
+            )
+        # 만약에 오류뜨면
         except:
-            pass
+            return False
+    return True
+
+
+def update_exchangerate(symbol):
+    try:
+        ticker_check = yf.Ticker(symbol)
+        info_check = ticker_check.info
+        exchange = ExchangeRate.objects.get(symbol=symbol)
+        exchange.symbol=info_check['symbol']
+        exchange.shortName=info_check['shortName']
+        exchange.currency=info_check['currency']
+        exchange.regularMarketPrice=info_check['regularMarketPrice']
+        exchange.previousClose=info_check['previousClose']
+        exchange.regularMarketPreviousClose=info_check['regularMarketPreviousClose']
+        exchange.save()
     # 만약에 오류뜨면
     except:
         return False
+    return True
+
+
+def data_tickersymbol(ticker):
+    ## ticker 로 심볼 데이터 찾아서 있으면 트루 없으면 만들어서 트루 못만들면 폴스
+    ticker = ticker.lower()
+    symbol = TickerSymbol.objects.filter(ticker=ticker)
+    if len(symbol) == 1:
+        return True
+    elif len(symbol) == 0:
+    # 존재하는 symbol이라 가정하고 진행
+        try:
+            # symbol모델로 데이터만들기
+            ticker_check = yf.Ticker(ticker)
+            info_check = ticker_check.info
+            tickersymbol = TickerSymbol.objects.create(
+                ticker=ticker,
+                symbol=info_check['symbol'],
+                shortName=info_check['shortName'],
+                longName=info_check['longName'],
+                currency=info_check['currency'],
+                financialCurrency=info_check['financialCurrency'],
+                country=info_check['country'],
+                market=info_check['market'],
+                exchange=info_check['exchange'],
+                marketCap=info_check['marketCap'],
+                dividendYield=info_check['dividendYield'],
+                trailingEps=info_check['trailingEps'],
+                beta=info_check['beta'],
+                currentPrice=info_check['currentPrice'],
+                previousClose=info_check['previousClose'],
+                regularMarketPreviousClose=info_check['regularMarketPreviousClose']
+            )
+            try:
+                tickersymbol.trailingPE=info_check['trailingPE']
+                tickersymbol.save()
+            except:
+                pass
+        # 만약에 오류뜨면
+        except:
+            return False
     return True
 
 
@@ -76,6 +125,9 @@ def update_price(ticker):
     try:
         ticker_check = yf.Ticker(ticker)
         history_check = ticker_check.history(period="1d")
+        print(history_check)
+        print(history_check['Close'].values[0])
+        history_check['Close'].values[0]
     except:
         return False
     return True
@@ -100,5 +152,14 @@ def update(request):
         else:
             context = {'result' : '실패'}
         return render(request, 'data_market/update.html', context)
+    elif request.method == "POST" and request.POST['option'] == "c":
+        ticker = request.POST['ticker']
+        is_update = data_exchangerate(ticker)
+        if is_update == True:
+            context = {'result' : '성공'}
+        else:
+            context = {'result' : '실패'}
+        return render(request, 'data_market/update.html', context)
+
     else:
         return render(request, 'data_market/update.html')

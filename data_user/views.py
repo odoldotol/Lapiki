@@ -33,29 +33,40 @@ def quickcreate1(request, id):
         return redirect('accounts:logout')
     # 메써드가 포스트이고 작성이 완료가 안됬으면
     if request.method == "POST" and request.POST['complete'] == "n":
-        # code 받아서 symbol모델에서 찾아보기
         code = request.POST['code']
-        code = code.lower()
-        symbol = TickerSymbol.objects.filter(ticker=code)
-        # 없으면
-        if len(symbol) == 0:
-            # 새로 만들어봐!
-            data_symbol = data_tickersymbol(code)
-            # 못만들어왔으면
-            if data_symbol == False:
-                # 오류 메세지를 context에 추가하여 템플릿 랜더하기
-                # 포트폴리오 종속 어카운트와 포트id를 context에 담기
-                accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
-                tickersymbols = TickerSymbol.objects.all()
-                context = {
-                    'id_portfolio' : id,
-                    'accounts' : accounts,
-                    'kind' : 'a',
-                    'tickersymbols' : tickersymbols,
-                    'error': "symbol을 찾을수 없습니다."
-                }
-                # 작성 템플릿 랜더
-                return render(request, 'data_user/quickcreate1.html', context)
+        data_symbol = data_tickersymbol(code)
+        if data_symbol == False:
+            list_for_create = []
+            try:
+                len_list = int(request.POST['len_list'])
+                for i in range(len_list):
+                    account_id = request.POST[f'account_id{i}']
+                    ticker = request.POST[f'ticker{i}']
+                    shortName = request.POST[f'shortName{i}']
+                    amount = request.POST[f'amount{i}']
+                    dic = {}
+                    dic['account_id'] = account_id
+                    dic['ticker'] = ticker
+                    dic['shortName'] = shortName
+                    dic['amount'] = amount
+                    list_for_create = list_for_create + [dic]
+            except:
+                pass
+            # 오류 메세지를 context에 추가하여 템플릿 랜더하기
+            # 포트폴리오 종속 어카운트와 포트id를 context에 담기
+            accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
+            tickersymbols = TickerSymbol.objects.all()
+            context = {
+                'id_portfolio' : id,
+                'accounts' : accounts,
+                'kind' : 'a',
+                'tickersymbols' : tickersymbols,
+                'error': "symbol을 찾을수 없습니다.",
+                'len_list' : len_list,
+                'list_for_create' : list_for_create,
+            }
+            # 작성 템플릿 랜더
+            return render(request, 'data_user/quickcreate1.html', context)
         ##### 있거나 만들어왔으면 생성할 모델들의 재료들을 기록해두고 다시 랜더하기
         list_for_create = []
         try:
@@ -114,7 +125,7 @@ def quickcreate1(request, id):
             account = get_object_or_404(PortfoliosAccount, id=account_id)
             code = tickersymbol.symbol
             name = tickersymbol.longName
-            format = get_object_or_404(AssetFormat, title='주식')
+            format = get_object_or_404(AssetFormat, code='aa')
             # 계좌에 동일역할 asset이 이미 있는지 확인
             check = AccountsAsset.objects.filter(account=account, format=format, code=code)
             # 없을떄만 생성
@@ -122,6 +133,7 @@ def quickcreate1(request, id):
                 AccountsAsset.objects.create(
                     account=account,
                     format=format,
+                    classi='a',
                     code=code,
                     name=name,
                     portfolio=portfolio
@@ -137,7 +149,7 @@ def quickcreate1(request, id):
                 portfolio=portfolio
             )
         # 
-        return redirect('data_user:quickcreate_menu', id)
+        return redirect('data_user:quickcreate1', id)
     # 머써드가 포스트가 아니면
     else:
         # 포트폴리오 종속 어카운트와 포트id를 context에 담기
