@@ -12,7 +12,7 @@ class FinancialAccountsTitle(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
     # account 에 배정해줄 타이틀
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=30, unique=True)
     # 필터
     a = models.BooleanField(default=False, help_text="stocks, etf,,, exchange traded financial instruments")
     b = models.BooleanField(default=False, help_text="crypto")
@@ -27,8 +27,6 @@ class AssetFormat(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
     # 포멧이름
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, unique=True)
     # 포멧코드
     code = models.CharField(max_length=50, default='')
-    # 수량 소숫점 이하 자릿수
-    amount_decimal_places = models.IntegerField(default=0)

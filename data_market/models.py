@@ -37,11 +37,42 @@ class ExchangeRate(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
     # symbol ex) KRW=X
-    symbol = models.CharField(max_length=50, null=True)
+    symbol = models.CharField(max_length=50, null=True, unique=True)
     # shortName ex) USD/KRW
     shortName = models.CharField(max_length=50, null=True)
-    #currency ex) KRW
+    # currency ex) KRW
+    currency = models.CharField(max_length=50, null=True, unique=True)
+    # 서버에서 직접 줘야함 ex> Korean Won
+    currency_name = models.CharField(max_length=50, null=True)
+
+    regularMarketPrice = models.CharField(max_length=50, null=True)
+
+    previousClose = models.CharField(max_length=50, null=True)
+    regularMarketPreviousClose = models.CharField(max_length=50, null=True)
+
+
+class CryptoUSD(models.Model):
+    # 생성 및 마지막 수정 일시
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified_at = models.DateTimeField(auto_now=True)
+    # 엑세시용 (btc-usd)
+    ticker = models.CharField(max_length=50, null=True, unique=True)
+    # BTC-USD
+    symbol = models.CharField(max_length=50, null=True, unique=True)
+
+    # bitcoin
+    name = models.CharField(max_length=50, null=True)
+    # bitcoin USD
+    shortName = models.CharField(max_length=50, null=True)
+
+    # BTC
+    fromCurrency = models.CharField(max_length=50, null=True)
+    # USD=X
+    toCurrency = models.CharField(max_length=50, null=True)
+    # USD
     currency = models.CharField(max_length=50, null=True)
+
+    marketCap = models.CharField(max_length=50, null=True)
 
     regularMarketPrice = models.CharField(max_length=50, null=True)
 

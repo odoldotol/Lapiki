@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 
-from .models import TickerSymbol, ExchangeRate
+from .models import CryptoUSD, TickerSymbol, ExchangeRate
 
 import yfinance as yf
 
@@ -88,6 +88,38 @@ def data_tickersymbol(ticker):
         except:
             return False
     return True
+
+
+def data_cryptousd(ticker):
+    ## ticker 로 심볼 데이터 찾아서 있으면 트루 없으면 만들어서 트루 못만들면 폴스
+    ticker.lower()
+    symbol = CryptoUSD.objects.filter(ticker=ticker)
+    if len(symbol) == 1:
+        return True
+    elif len(symbol) == 0:
+    # 존재하는 symbol이라 가정하고 진행
+        try:
+            # symbol모델로 데이터만들기
+            ticker_check = yf.Ticker(ticker)
+            info_check = ticker_check.info
+            CryptoUSD.objects.create(
+                ticker=ticker,
+                symbol=info_check['symbol'],
+                name=info_check['name'],
+                shortName=info_check['shortName'],
+                fromCurrency=info_check['fromCurrency'],
+                toCurrency=info_check['toCurrency'],
+                currency=info_check['currency'],
+                marketCap=info_check['marketCap'],
+                regularMarketPrice=info_check['regularMarketPrice'],
+                previousClose=info_check['previousClose'],
+                regularMarketPreviousClose=info_check['regularMarketPreviousClose'],
+            )
+        # 만약에 오류뜨면
+        except:
+            return False
+    return True
+
 
 
 def update_tickersymbol(ticker):

@@ -42,12 +42,12 @@
     {% if error %}
     {{ error }}
     {% endif %}
-    <label for="">ticker symbol을 정확히 입력하세요</label>
-    <input type="text" name="code" class="form-control" list="symbols" id="">
+    <label for="">Symbol 검색</label>
+    <input type="text" name="symbol" class="form-control" list="symbols" id="">
 
     <datalist id="symbols">
-    {% for tickersymbol in tickersymbols %}
-    <option value="{{tickersymbol.symbol}}">{{tickersymbol.longName}}</option>
+    {% for cryptousd in cryptousds %}
+    <option value="{{cryptousd.symbol}}">{{cryptousd.shortName}}</option>
     {% endfor %}
     </datalist>
   </div>
@@ -55,8 +55,8 @@
   <br>
 
   <div class="form-group">
-    <label for="">수량을 입력하세요</label>
-    <input type="number" name="amount" class="form-control" id="">
+    <label for="">수량</label>
+    <input type="number" step=any name="amount" class="form-control" id="">
   </div>
 
   <br>

@@ -32,11 +32,12 @@ class PortfoliosAccount(models.Model):
 
 
 ### 참고 ###
-# ## classi
+# ## classi = dataportfolio 에서 연산할떄 분류(유저에게 보여주는 분류)
 # a : 주식
-# b : 
-# c :
-classi_list = ['a']
+# b : 크립토
+# c : 통화
+# d : 통화 기반 saving
+classi_list = ['a', 'b', 'c', 'd']
 
 # !!! 이 모델은 절대로 유저가 직접 접근할 수 없어야 합니다 !!!
 class AccountsAsset(models.Model):
@@ -60,8 +61,7 @@ class AccountsAsset(models.Model):
     # asset 속성(필요한 asset에만 사용)
     attribute = models.CharField(max_length=100)
     # asset 수량
-    decimal_places = getattr(format, 'amount_decimal_places', 0)
-    amount = models.DecimalField(max_digits=100, decimal_places=decimal_places, default=0)
+    amount = models.FloatField(default=0)
     # portfolio 종속
     portfolio = models.ForeignKey(to=Portfolio, on_delete=models.PROTECT)
 
@@ -100,10 +100,8 @@ class AssetsAction(models.Model):
     asset_buy = models.ForeignKey(to=AccountsAsset, null=True, on_delete=models.PROTECT, related_name='action_asset_buy')
     asset_sell = models.ForeignKey(to=AccountsAsset, null=True, on_delete=models.PROTECT, related_name='action_asset_sell')
     # buy/sell 수량
-    decimal_places_buy = getattr(asset_buy, 'decimal_places', 0)
-    decimal_places_sell = getattr(asset_sell, 'decimal_places', 0)
-    amount_buy = models.DecimalField(max_digits=100, default=0, decimal_places=decimal_places_buy)
-    amount_sell = models.DecimalField(max_digits=100, default=0, decimal_places=decimal_places_sell)
+    amount_buy = models.FloatField(default=0)
+    amount_sell = models.FloatField(default=0)
     # 라벨링
     rabel = models.CharField(
         max_length=2,
