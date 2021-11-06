@@ -36,9 +36,9 @@ def update_exchangerate(symbol):
         ticker_check = yf.Ticker(symbol)
         info_check = ticker_check.info
         exchange = ExchangeRate.objects.get(symbol=symbol)
-        exchange.symbol=info_check['symbol']
-        exchange.shortName=info_check['shortName']
-        exchange.currency=info_check['currency']
+        # exchange.symbol=info_check['symbol']
+        # exchange.shortName=info_check['shortName']
+        # exchange.currency=info_check['currency']
         exchange.regularMarketPrice=info_check['regularMarketPrice']
         exchange.previousClose=info_check['previousClose']
         exchange.regularMarketPreviousClose=info_check['regularMarketPreviousClose']
@@ -121,20 +121,42 @@ def data_cryptousd(ticker):
     return True
 
 
+def update_cryptousd(ticker):
+    try:
+        ticker_check = yf.Ticker(ticker)
+        info_check = ticker_check.info
+        cryptousd = CryptoUSD.objects.get(ticker=ticker)
+        # cryptousd.symbol=info_check['symbol'],
+        # cryptousd.name=info_check['name'],
+        # cryptousd.shortName=info_check['shortName'],
+        # cryptousd.fromCurrency=info_check['fromCurrency'],
+        # cryptousd.toCurrency=info_check['toCurrency'],
+        # cryptousd.currency=info_check['currency'],
+        cryptousd.marketCap=info_check['marketCap'],
+        cryptousd.regularMarketPrice=info_check['regularMarketPrice'],
+        cryptousd.previousClose=info_check['previousClose'],
+        cryptousd.regularMarketPreviousClose=info_check['regularMarketPreviousClose'],
+        cryptousd.save()
+    # 만약에 오류뜨면
+    except:
+        return False
+    return True
+
+
 
 def update_tickersymbol(ticker):
     try:
         ticker_check = yf.Ticker(ticker)
         info_check = ticker_check.info
         tickersymbol = TickerSymbol.objects.get(ticker=ticker)
-        tickersymbol.symbol=info_check['symbol']
+        # tickersymbol.symbol=info_check['symbol']
         tickersymbol.shortName=info_check['shortName']
         tickersymbol.longName=info_check['longName']
-        tickersymbol.currency=info_check['currency']
-        tickersymbol.financialCurrency=info_check['financialCurrency']
+        # tickersymbol.currency=info_check['currency']
+        # tickersymbol.financialCurrency=info_check['financialCurrency']
         tickersymbol.country=info_check['country']
-        tickersymbol.market=info_check['market']
-        tickersymbol.exchange=info_check['exchange']
+        # tickersymbol.market=info_check['market']
+        # tickersymbol.exchange=info_check['exchange']
         tickersymbol.marketCap=info_check['marketCap']
         tickersymbol.dividendYield=info_check['dividendYield']
         tickersymbol.trailingEps=info_check['trailingEps']
@@ -166,6 +188,9 @@ def update_price(ticker):
 
 
 def update(request):
+    tickersymbols = TickerSymbol.objects.all()
+    cryptousds = CryptoUSD.objects.all()
+    exchangerates = ExchangeRate.objects.all()
     if request.method == "POST" and request.POST['option'] == "a":
         ticker = request.POST['ticker']
         ticker = ticker.lower()
@@ -192,6 +217,35 @@ def update(request):
         else:
             context = {'result' : '실패'}
         return render(request, 'data_market/update.html', context)
-
+    elif request.method == "POST" and request.POST['option'] == "d":
+        for tickersymbol in tickersymbols:
+            ticker = tickersymbol.ticker
+            is_update = update_tickersymbol(ticker)
+            if is_update == False:
+                break
+        if is_update == False:
+            context = {'result' : '실패'}
+        context = {'result' : '성공'}
+        return render(request, 'data_market/update.html', context)
+    elif request.method == "POST" and request.POST['option'] == "e":
+        for cryptousd in cryptousds:
+            ticker = cryptousd.ticker
+            is_update = update_cryptousd(ticker)
+            if is_update == False:
+                break
+        if is_update == False:
+            context = {'result' : '실패'}
+        context = {'result' : '성공'}
+        return render(request, 'data_market/update.html', context)
+    elif request.method == "POST" and request.POST['option'] == "f":
+        for exchangerate in exchangerates:
+            ticker = exchangerate.symbol
+            is_update = update_exchangerate(ticker)
+            if is_update == False:
+                break
+        if is_update == False:
+            context = {'result' : '실패'}
+        context = {'result' : '성공'}
+        return render(request, 'data_market/update.html', context)
     else:
         return render(request, 'data_market/update.html')

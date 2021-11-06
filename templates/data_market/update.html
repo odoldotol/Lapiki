@@ -10,27 +10,54 @@
 <form method="POST" action="">
 {% csrf_token %}
     <input type="hidden" name="option" value="a">
-    <label for="">TickerSymbol 전체 업데이트하기</label>
+    <label for="">TickerSymbol 업데이트</label>
     <input type="text" name="ticker" class="form-control" id="">
     <input type="submit" value="update">
 </form>
-
+<br><br>
 <form method="POST" action="">
 {% csrf_token %}
     <input type="hidden" name="option" value="b">
-    <label for="">TickerSymbol 가격만 업데이트 하기(미완성)</label>
+    <label for="">TickerSymbol 직전 종가 가격만 업데이트</label>
     <input type="text" name="ticker" class="form-control" id="">
     <input type="submit" value="update">
 </form>
-
+<br><br>
 <form method="POST" action="">
 {% csrf_token %}
     <input type="hidden" name="option" value="c">
-    <label for="">ExchangeRate 생성하기</label>
+    <label for="">ExchangeRate 생성하기 (ex krw=x)</label>
     <input type="text" name="ticker" class="form-control" id="">
     <input type="submit" value="update">
 </form>
-
+<br><br>
+<form method="POST" action="">
+{% csrf_token %}
+    <div class="form-group">
+    <label for="">마켓 데이터 모델별 전체 업데이트</label>
+        <select name='option' required class="form-control" id="">
+        <option value="d">TickerSymbol</option>
+        <option value="e">CryptoUSD</option>
+        <option value="f">ExchangeRate</option>
+        </select>
+    </div>
+    <input type="submit" value="update">
+</form>
+<br><br>
+<form method="POST" action="">
+{% csrf_token %}
+    <div class="form-group">
+    <label for="">마켓 데이터 모델별 전일 종가만 업데이트(아직 필요가 없어서 막아둠)</label>
+        <select name='option' required class="form-control" id="">
+        <option value="d">TickerSymbol</option>
+        <option value="e">CryptoUSD</option>
+        <option value="f">ExchangeRate</option>
+        </select>
+    </div>
+    {% comment %} <input type="submit" value="update"> {% endcomment %}
+</form>
+<br><br>
+결과 확인<br>
 {{result}}!!!
 
 {% endblock content %}

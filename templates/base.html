@@ -11,34 +11,50 @@
         {% endblock title %}
     </title>
 
-    <!-- {% comment %} <link rel="stylesheet" href="{% static 'css/main.css' %}"> {% endcomment %} -->
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 
-<body>
+<body style="background-color:#000000">
 
     <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">홈</a></li>
-                {% if user.is_authenticated %}
-                <li>{{user.username}} 님</li>
-                <li><a href="{% url 'portfolios:hall' %}">포트폴리오</a></li>
-                <li><a href="{% url 'accounts:logout' %}">로그아웃</a></li>
-                {% else %}
-                <li><a href="{% url 'accounts:login' %}">로그인</a></li>
-                <li><a href="{% url 'accounts:signup' %}">회원가입</a></li>
-                {% endif %}
-            </ul>
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #000000;">
+            <div class="container-fluid">
+            {% if home != 'y' %}
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static "/img/logo.png" %}" width="100" alt="">
+                </a>
+            {% endif %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            {{user.username}} 님</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'portfolios:hall' %}">포트폴리오</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:logout' %}">로그아웃</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:login' %}">로그인</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:signup' %}">회원가입</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
 
     {% block content %}
     {% endblock content %}
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
 
 </body>
 

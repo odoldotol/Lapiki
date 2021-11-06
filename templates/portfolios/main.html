@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+
+
+<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stockthing.png" alt="">
+<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_crypto.png" alt="">
+<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_cash.png" alt="">
+<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_saving.png" alt="">
+<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stock_crypto_cash.png" alt="">
+<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stock_crypto_saving_cash.png" alt="">
+
+
+{% endblock content %}

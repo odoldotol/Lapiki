@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+
+{% if error %}
+{{ error }}
+{% endif %}
+
+<a href="{% url 'data_user:quickcreate_menu' id_portfolio %}">빠른생성메뉴로가기</a>
+
+<hr>
+
+<br>
+
+<form method="POST" action="">
+  {% csrf_token %}
+  <input type="hidden" name="complete" value="n">
+  <div class="form-group">
+    <label for="">select account</label>
+    <select name='account' required class="form-control" id="">
+      {% for account in accounts %}
+        {% if selected_maker == account.id|slugify %}
+        <option selected value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
+        {% else %}
+        <option value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+
+    계좌가 없으면 등록해주세요
+    <a href="{% url 'data_user:register_account' id_portfolio kind %}" class="btn btn-primary">새로운 account 등록하러 가기</a>
+  </div>
+
+  <br>
+
+  <div class="form-group">
+    {% if error %}
+    {{ error }}
+    {% endif %}
+    <label for="">Currency</label>
+    <select name='symbol' required class="form-control" id="">
+      {% for exchangerate in exchangerates %}
+      <option value="{{exchangerate.currency}}">{{exchangerate.currency_name}}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <br>
+
+  <div class="form-group">
+    <label for="">금액</label>
+    <input type="number" step=any name="amount" class="form-control" id="">
+  </div>
+
+  <br>
+  {% if len_list %}
+    <input type="hidden" name="len_list" value="{{len_list}}">
+      
+    {% for dic in list_for_create %}
+      <input type="hidden" name="account_id{{forloop.counter0}}" value="{{dic.account_id}}">
+      <input type="hidden" name="ticker{{forloop.counter0}}" value="{{dic.ticker}}">
+      <input type="hidden" name="shortName{{forloop.counter0}}" value="{{dic.shortName}}">
+      <input type="hidden" name="amount{{forloop.counter0}}" value="{{dic.amount}}">
+    {% endfor %}
+
+  {% endif %}
+
+  <input type="submit" value="register">
+</form>
+
+<br>
+
+<hr>
+{% regroup list_for_create|dictsort:"account_id" by account_id as account_list %}
+{% for account_id in account_list %}
+<div class="card" style="max-width: 30rem;">
+  <div class="card-header">
+  {% for account in accounts %}
+  {% if account.id|slugify == account_id.grouper %}
+  {{account.title}} {{account.nickname}}
+  {% endif %}
+  {% endfor %}
+  </div>
+  <ul class="list-group list-group-flush">
+    {% for ticker in account_id.list %}
+    <li class="list-group-item">{{ticker.ticker|upper}} 
+      <span>{{ticker.shortName}}</span> 
+      <span>{{ticker.amount}}</span>
+     </li>
+    {% endfor %}
+  </ul>
+</div>
+<br>
+{% endfor %}
+
+
+{% if len_list %}
+<form action="" method="POST">
+{% csrf_token %}
+  <input type="hidden" name="complete" value="y">
+  <input type="hidden" name="len_list" value="{{len_list}}">
+  {% for dic in list_for_create %}
+    <input type="hidden" name="account_id{{forloop.counter0}}" value="{{dic.account_id}}">
+    <input type="hidden" name="ticker{{forloop.counter0}}" value="{{dic.ticker}}">
+    <input type="hidden" name="amount{{forloop.counter0}}" value="{{dic.amount}}">
+  {% endfor %}
+  <input type="submit" value="complete">
+  <a href="{% url 'data_user:quickcreate2' id_portfolio %}" class="btn btn-primary">reset</a>
+{% endif %}
+</form>
+<a href="{% url 'data_user:quickcreate_menu' id_portfolio %}">빠른생성메뉴로나가기</a>
+<br>
+
+<hr>
+
+{% endblock content %}

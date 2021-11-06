@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 
 {% endblock title %}
@@ -9,14 +11,18 @@
 
 <div class="card-group">
 {% for portfolio in portfolios %}
-    <div class="card" style="max-width: 18rem;">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-header">
+    <div class="card" style="max-width: 20rem; background-color: #212121;" >
         {% if portfolio.is_main == True %}
-        <a href="{% url 'portfolios:open' portfolio.id %}">(main){{portfolio.name}}</a>
+        <a href="{% url 'portfolios:open' portfolio.id %}">
+        <img class="card-img-top" src="{% static "/img/mainbook.png" %}" alt="...">
+        </a>
         {% else %}
-        <a href="{% url 'portfolios:open' portfolio.id %}">{{portfolio.name}}</a>
+        <a href="{% url 'portfolios:open' portfolio.id %}">
+        <img class="card-img-top" src="{% static "/img/book.png" %}" alt="...">
+        </a>
         {% endif %}
+        <div class="card-header">
+        <a href="{% url 'portfolios:open' portfolio.id %}">{{portfolio.name}}</a>
         </div>
         <div class="card-body">
             <a href="{% url 'data_user:quickcreate_menu' portfolio.id %}">Quick Create</a>
@@ -32,14 +38,14 @@
         </div>
     </div>
 {% endfor %}
-    <div class="card" style="max-width: 18rem;">
-        <div class="card-body">
-            {% if len_portfolios > 1 %}
-            추가 생성이 불가능합니다.(자물쇠이미지)
-            {% else %}
-            <a href="{% url 'portfolios:create' %}" class="btn btn-primary">생성하기(+이미지)</a>
-            {% endif %}
-        </div>
+    <div class="card" style="max-width: 20rem; background-color: #212121;">
+        {% if len_portfolios > 1 %}
+            <img class="card-img-top" src="{% static "/img/lock.png" %}" alt="...">
+        {% else %}
+            <a href="{% url 'portfolios:create' %}" class="card-img-top">
+            <img class="card-img-top" src="{% static "/img/plus.png" %}" alt="Card image cap">
+            </a>
+        {% endif %}
     </div>
 </div>
 

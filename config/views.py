@@ -18,7 +18,8 @@ def entry(request):
         return redirect('home')
 
 def home(request):
-    return render(request, 'home.html')
+    context = {'home' : 'y'}
+    return render(request, 'home.html', context)
 
 
 
