@@ -17,7 +17,7 @@
   {% csrf_token %}
   <div class="form-group">
     <label for="">없으면 직접 입력해주세요. 리스트에 포함시키겠습니다.</label>
-    <input type="text" name="title" class="form-control" list="titles" id="">
+    <input type="text" name="title" style="width:400px" class="form-control" list="titles" id="">
     <datalist id="titles">
     {% for title in titles %}
     <option>{{title.title}}</option>

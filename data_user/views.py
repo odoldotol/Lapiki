@@ -86,7 +86,9 @@ def quickcreate0(request, id):
             pass
         account_id = request.POST['account']
         selected_maker = request.POST['account']
+        code = code.lower()
         tickersymbol = get_object_or_404(TickerSymbol, ticker=code)
+        code = code.upper()
         shortName = tickersymbol.shortName
         amount = request.POST['amount']
         dic = {}
@@ -120,6 +122,7 @@ def quickcreate0(request, id):
             ticker = request.POST[f'ticker{i}']
             amount = request.POST[f'amount{i}']
             # symbol모델에서 찾아오기
+            ticker = ticker.lower()
             tickersymbol = get_object_or_404(TickerSymbol, ticker=ticker)
             ##### asset 만들기
             account = get_object_or_404(PortfoliosAccount, id=account_id)

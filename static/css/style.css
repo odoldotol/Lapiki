@@ -1,0 +1,13 @@
+label,h1,li,div,a{
+    color:#757575;
+}
+
+a.btn.btn-primary{
+    background:#757575;
+    color:#000000;
+}
+
+select.form-control,input.form-control,input{
+    background:#adadad;
+    color:#000000;
+}

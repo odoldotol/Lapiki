@@ -22,7 +22,7 @@
   <input type="hidden" name="complete" value="n">
   <div class="form-group">
     <label for="">select account</label>
-    <select name='account' required class="form-control" id="">
+    <select name='account' style="width:400px" required class="form-control" id="">
       {% for account in accounts %}
         {% if selected_maker == account.id|slugify %}
         <option selected value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
@@ -43,7 +43,7 @@
     {{ error }}
     {% endif %}
     <label for="">ticker symbol을 정확히 입력하세요</label>
-    <input type="text" name="code" class="form-control" list="symbols" id="">
+    <input type="text" name="code" style="width:400px" class="form-control" list="symbols" id="">
 
     <datalist id="symbols">
     {% for tickersymbol in tickersymbols %}
@@ -56,7 +56,7 @@
 
   <div class="form-group">
     <label for="">수량을 입력하세요</label>
-    <input type="number" name="amount" class="form-control" id="">
+    <input type="number" name="amount" style="width:400px" class="form-control" id="">
   </div>
 
   <br>

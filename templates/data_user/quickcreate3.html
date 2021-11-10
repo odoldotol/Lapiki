@@ -22,7 +22,7 @@
   <input type="hidden" name="complete" value="n">
   <div class="form-group">
     <label for="">select account</label>
-    <select name='account' required class="form-control" id="">
+    <select name='account' style="width:400px" required class="form-control" id="">
       {% for account in accounts %}
         {% if selected_maker == account.id|slugify %}
         <option selected value="{{account.id}}">{{account.title}} {{account.nickname}}</option>
@@ -43,7 +43,7 @@
     {{ error }}
     {% endif %}
     <label for="">Currency</label>
-    <select name='symbol' required class="form-control" id="">
+    <select name='symbol' style="width:400px" required class="form-control" id="">
       {% for exchangerate in exchangerates %}
       <option value="{{exchangerate.currency}}">{{exchangerate.currency_name}}</option>
       {% endfor %}
@@ -54,21 +54,21 @@
 
   <div class="form-group">
     <label for="">금액</label>
-    <input type="number" step=any name="amount" class="form-control" id="">
+    <input type="number" style="width:400px" step=any name="amount" class="form-control" id="">
   </div>
 
   <br>
 
   <div class="form-group">
     <label for="">saving name</label>
-    <input type="text" name="name" maxlength="20" class="form-control" id="">
+    <input type="text" name="name" style="width:400px" maxlength="20" class="form-control" id="">
   </div>
 
   <br>
 
   <div class="form-group">
     <label for="">saving detail</label>
-    <input type="text" name="detail" class="form-control" id="">
+    <input type="text" name="detail" style="width:400px" class="form-control" id="">
   </div>
 
   <br>

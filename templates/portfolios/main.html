@@ -11,12 +11,37 @@
 
 
 
-<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stockthing.png" alt="">
-<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_crypto.png" alt="">
-<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_cash.png" alt="">
-<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_saving.png" alt="">
-<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stock_crypto_cash.png" alt="">
-<img src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stock_crypto_saving_cash.png" alt="">
+<div class="card-group">
+    <div class="card" style="max-width: 18rem; background-color: #000000;">
+        <img class="card-img-top" src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stock_crypto_saving_cash.png" alt="Card image cap">
+    </div>
+
+    <div class="card" style="max-width: 30rem; background-color: #000000;">
+        <img class="card-img-top" src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stock_crypto_cash.png" alt="Card image cap">
+    </div>
+
+    <div class="card" style="max-width: 18rem; background-color: #000000;">
+        <img class="card-img-top" src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_crypto.png" alt="Card image cap">
+    </div>
+</div>
+
+
+<div class="card-group">
+    <div class="card" style="max-width: 14rem; background-color: #000000;">
+        <img class="card-img-top" src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_saving.png" alt="Card image cap">
+    </div>
+
+    <div class="card" style="max-width: 18rem; background-color: #000000;">
+        <img class="card-img-top" src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_cash.png" alt="Card image cap">
+    </div>
+
+    <div class="card" style="max-width: 50rem; background-color: #000000;">
+        <img class="card-img-top" src="{% get_static_prefix %}img/visualizing/{{portfolio_id}}_main_stockthing.png" alt="Card image cap">
+    </div>
+</div>
+
+
+
 
 
 {% endblock content %}

@@ -11,7 +11,7 @@
 
 <div class="card-group">
 {% for portfolio in portfolios %}
-    <div class="card" style="max-width: 20rem; background-color: #212121;" >
+    <div class="card" style="max-width: 21rem; background-color: #212121;" >
         {% if portfolio.is_main == True %}
         <a href="{% url 'portfolios:open' portfolio.id %}">
         <img class="card-img-top" src="{% static "/img/mainbook.png" %}" alt="...">
@@ -38,7 +38,7 @@
         </div>
     </div>
 {% endfor %}
-    <div class="card" style="max-width: 20rem; background-color: #212121;">
+    <div class="card" style="max-width: 21rem; background-color: #212121;">
         {% if len_portfolios > 1 %}
             <img class="card-img-top" src="{% static "/img/lock.png" %}" alt="...">
         {% else %}
