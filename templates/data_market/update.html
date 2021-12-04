@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 
 {% endblock title %}
@@ -47,17 +49,17 @@
 <form method="POST" action="">
 {% csrf_token %}
     <div class="form-group">
-    <label for="">마켓 데이터 모델별 전일 종가만 업데이트(아직 필요가 없어서 막아둠)</label>
+    <label for="">마켓 데이터 모델별 전일 종가만 업데이트</label>
         <select name='option' required class="form-control" id="">
-        <option value="d">TickerSymbol</option>
-        <option value="e">CryptoUSD</option>
-        <option value="f">ExchangeRate</option>
+        <option value="g">TickerSymbol</option>
+        <option value="h">CryptoUSD</option>
+        <option value="i">ExchangeRate</option>
         </select>
     </div>
-    {% comment %} <input type="submit" value="update"> {% endcomment %}
+    <input type="submit" value="update">
 </form>
 <br><br>
-결과 확인<br>
-{{result}}!!!
+<p>결과 확인</p><br>
+<p>{{result}}!!!</p>
 
 {% endblock content %}

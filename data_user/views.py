@@ -34,6 +34,9 @@ def quickcreate0(request, id):
     # 메써드가 포스트이고 작성이 완료가 안됬으면
     if request.method == "POST" and request.POST['complete'] == "n":
         code = request.POST['code']
+        code = code.upper()
+        if len(code) == 6 and code.isdigit() == True:
+            code = code + ".KS"
         data_symbol = data_tickersymbol(code)
         if data_symbol == False:
             list_for_create = []
@@ -42,6 +45,7 @@ def quickcreate0(request, id):
                 for i in range(len_list):
                     account_id = request.POST[f'account_id{i}']
                     ticker = request.POST[f'ticker{i}']
+                    ticker = ticker.upper()
                     shortName = request.POST[f'shortName{i}']
                     amount = request.POST[f'amount{i}']
                     dic = {}
@@ -56,15 +60,27 @@ def quickcreate0(request, id):
             # 포트폴리오 종속 어카운트와 포트id를 context에 담기
             accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, a=True)
             tickersymbols = TickerSymbol.objects.all()
-            context = {
-                'id_portfolio' : id,
-                'accounts' : accounts,
-                'kind' : 'a',
-                'tickersymbols' : tickersymbols,
-                'error': "symbol을 찾을수 없습니다.",
-                'len_list' : len_list,
-                'list_for_create' : list_for_create,
-            }
+
+            try:
+                context = {
+                    'id_portfolio' : id,
+                    'accounts' : accounts,
+                    'kind' : 'a',
+                    'tickersymbols' : tickersymbols,
+                    'error': "symbol을 찾을수 없습니다.",
+                    'len_list' : len_list,
+                    'list_for_create' : list_for_create,
+                }
+            except:
+                context = {
+                    'id_portfolio' : id,
+                    'accounts' : accounts,
+                    'kind' : 'a',
+                    'tickersymbols' : tickersymbols,
+                    'error': "symbol을 찾을수 없습니다.",
+                    'list_for_create' : list_for_create,
+                }
+
             # 작성 템플릿 랜더
             return render(request, 'data_user/quickcreate0.html', context)
         ##### 있거나 만들어왔으면 생성할 모델들의 재료들을 기록해두고 다시 랜더하기
@@ -74,6 +90,7 @@ def quickcreate0(request, id):
             for i in range(len_list):
                 account_id = request.POST[f'account_id{i}']
                 ticker = request.POST[f'ticker{i}']
+                ticker = ticker.upper()
                 shortName = request.POST[f'shortName{i}']
                 amount = request.POST[f'amount{i}']
                 dic = {}
@@ -86,9 +103,7 @@ def quickcreate0(request, id):
             pass
         account_id = request.POST['account']
         selected_maker = request.POST['account']
-        code = code.lower()
-        tickersymbol = get_object_or_404(TickerSymbol, ticker=code)
-        code = code.upper()
+        tickersymbol = get_object_or_404(TickerSymbol, symbol=code)
         shortName = tickersymbol.shortName
         amount = request.POST['amount']
         dic = {}
@@ -120,10 +135,10 @@ def quickcreate0(request, id):
         for i in range(len_list):
             account_id = request.POST[f'account_id{i}']
             ticker = request.POST[f'ticker{i}']
+            ticker = ticker.upper()
             amount = request.POST[f'amount{i}']
             # symbol모델에서 찾아오기
-            ticker = ticker.lower()
-            tickersymbol = get_object_or_404(TickerSymbol, ticker=ticker)
+            tickersymbol = get_object_or_404(TickerSymbol, symbol=ticker)
             ##### asset 만들기
             account = get_object_or_404(PortfoliosAccount, id=account_id)
             code = tickersymbol.symbol
@@ -177,7 +192,7 @@ def quickcreate1(request, id):
     # 메써드가 포스트이고 작성이 완료가 안됬으면
     if request.method == "POST" and request.POST['complete'] == "n":
         symbol = request.POST['symbol']
-        symbol = symbol.lower()
+        symbol = symbol.upper()
         if symbol[-4:] != '-usd':
             symbol = symbol + '-usd'
         # 입력한 symbol 가져와서 CryptoUSD 만들어보기
@@ -191,6 +206,7 @@ def quickcreate1(request, id):
                 for i in range(len_list):
                     account_id = request.POST[f'account_id{i}']
                     ticker = request.POST[f'ticker{i}']
+                    ticker = ticker.upper()
                     shortName = request.POST[f'shortName{i}']
                     amount = request.POST[f'amount{i}']
                     dic = {}
@@ -205,15 +221,27 @@ def quickcreate1(request, id):
             # 오류 메세지를 context에 추가하여 템플릿 랜더하기
             accounts = PortfoliosAccount.objects.filter(portfolio=portfolio, b=True)
             cryptousds = CryptoUSD.objects.all()
-            context = {
-                'id_portfolio' : id,
-                'accounts' : accounts,
-                'kind' : 'b',
-                'cryptousds' : cryptousds,
-                'error': "symbol을 찾을수 없습니다.",
-                'len_list' : len_list,
-                'list_for_create' : list_for_create,
-            }
+
+            try:
+                context = {
+                    'id_portfolio' : id,
+                    'accounts' : accounts,
+                    'kind' : 'b',
+                    'cryptousds' : cryptousds,
+                    'error': "symbol을 찾을수 없습니다.",
+                    'len_list' : len_list,
+                    'list_for_create' : list_for_create,
+                }
+            except:
+                context = {
+                    'id_portfolio' : id,
+                    'accounts' : accounts,
+                    'kind' : 'b',
+                    'cryptousds' : cryptousds,
+                    'error': "symbol을 찾을수 없습니다.",
+                    'list_for_create' : list_for_create,
+                }
+
             # 작성 템플릿 랜더
             return render(request, 'data_user/quickcreate1.html', context)
         ##### 있거나 만들어왔으면 생성할 모델들의 재료들을 기록해두고 다시 랜더하기
@@ -223,6 +251,7 @@ def quickcreate1(request, id):
             for i in range(len_list):
                 account_id = request.POST[f'account_id{i}']
                 ticker = request.POST[f'ticker{i}']
+                ticker = ticker.upper()
                 shortName = request.POST[f'shortName{i}']
                 amount = request.POST[f'amount{i}']
                 dic = {}
@@ -236,7 +265,7 @@ def quickcreate1(request, id):
         # 위에 만들어진 입역예약리스트에 지금 입력받은거 추가
         account_id = request.POST['account']
         selected_maker = request.POST['account']
-        cryptousd = get_object_or_404(CryptoUSD, ticker=symbol)
+        cryptousd = get_object_or_404(CryptoUSD, symbol=symbol)
         shortName = cryptousd.shortName
         amount = request.POST['amount']
         dic = {}
@@ -268,9 +297,10 @@ def quickcreate1(request, id):
         for i in range(len_list):
             account_id = request.POST[f'account_id{i}']
             ticker = request.POST[f'ticker{i}']
+            ticker = ticker.upper()
             amount = request.POST[f'amount{i}']
             # symbol모델에서 찾아오기
-            cryptousd = get_object_or_404(CryptoUSD, ticker=ticker)
+            cryptousd = get_object_or_404(CryptoUSD, symbol=ticker)
             ##### asset 만들기
             account = get_object_or_404(PortfoliosAccount, id=account_id)
             code = cryptousd.symbol[:-4]
@@ -324,12 +354,14 @@ def quickcreate2(request, id):
     # 메써드가 포스트이고 작성이 완료가 안됬으면
     if request.method == "POST" and request.POST['complete'] == "n":
         symbol = request.POST['symbol']
+        symbol = symbol.upper()
         list_for_create = []
         try:
             len_list = int(request.POST['len_list'])
             for i in range(len_list):
                 account_id = request.POST[f'account_id{i}']
                 ticker = request.POST[f'ticker{i}']
+                ticker = ticker.upper()
                 shortName = request.POST[f'shortName{i}']
                 amount = request.POST[f'amount{i}']
                 dic = {}
@@ -375,6 +407,7 @@ def quickcreate2(request, id):
         for i in range(len_list):
             account_id = request.POST[f'account_id{i}']
             ticker = request.POST[f'ticker{i}']
+            ticker = ticker.upper()
             amount = request.POST[f'amount{i}']
             # symbol모델에서 찾아오기
             exchangerate = get_object_or_404(ExchangeRate, currency=ticker)
@@ -431,12 +464,14 @@ def quickcreate3(request, id):
     # 메써드가 포스트이고 작성이 완료가 안됬으면
     if request.method == "POST" and request.POST['complete'] == "n":
         symbol = request.POST['symbol']
+        symbol = symbol.upper()
         list_for_create = []
         try:
             len_list = int(request.POST['len_list'])
             for i in range(len_list):
                 account_id = request.POST[f'account_id{i}']
                 ticker = request.POST[f'ticker{i}']
+                ticker = ticker.upper()
                 shortName = request.POST[f'shortName{i}']
                 amount = request.POST[f'amount{i}']
                 dic = {}
@@ -482,6 +517,7 @@ def quickcreate3(request, id):
         for i in range(len_list):
             account_id = request.POST[f'account_id{i}']
             ticker = request.POST[f'ticker{i}']
+            ticker = ticker.upper()
             amount = request.POST[f'amount{i}']
             name = request.POST[f'shortName{i}']
             # symbol모델에서 찾아오기

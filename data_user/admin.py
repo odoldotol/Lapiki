@@ -6,5 +6,5 @@ admin.site.register(PortfoliosAccount)
 admin.site.register(AccountsAsset)
 
 @admin.register(AssetsAction)
-class FinancialAccountsTitleAdmin(admin.ModelAdmin):
+class AssetsActionAdmin(admin.ModelAdmin):
     list_display = ['action_time', 'asset_buy', 'amount_buy', 'asset_sell', 'amount_sell', 'rabel']

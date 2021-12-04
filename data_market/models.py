@@ -1,13 +1,14 @@
 from django.db import models
 
 class TickerSymbol(models.Model):
-    # 엑세스용 (소문자)
-    ticker = models.CharField(max_length=50, unique=True)
     # 생성 및 마지막 수정 일시
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
 
     symbol = models.CharField(max_length=50, unique=True)
+
+    quoteType = models.CharField(max_length=50, null=True)
+    legalType = models.CharField(max_length=50, null=True)
 
     shortName = models.CharField(max_length=50, null=True)
     longName = models.CharField(max_length=50, null=True)
@@ -18,18 +19,34 @@ class TickerSymbol(models.Model):
     country = models.CharField(max_length=50, null=True)
     market = models.CharField(max_length=50, null=True)
     exchange = models.CharField(max_length=50, null=True)
-
-    marketCap = models.CharField(max_length=50, null=True)
-    trailingPE = models.CharField(max_length=50, null=True)
-    dividendYield = models.CharField(max_length=50, null=True)
-
-    trailingEps = models.CharField(max_length=50, null=True)
-    beta = models.CharField(max_length=50, null=True)
+    exchangeTimezoneName = models.CharField(max_length=50, null=True)
+    exchangeTimezoneShortName = models.CharField(max_length=50, null=True)
 
     currentPrice = models.CharField(max_length=50, null=True)
-
     previousClose = models.CharField(max_length=50, null=True)
+    regularMarketPrice = models.CharField(max_length=50, null=True)
     regularMarketPreviousClose = models.CharField(max_length=50, null=True)
+
+    marketCap = models.CharField(max_length=50, null=True)
+    beta = models.CharField(max_length=50, null=True)
+    beta3Year = models.CharField(max_length=50, null=True)
+    # yield 가 이미 있어서 _ 로 구분함
+    _yield = models.CharField(max_length=50, null=True)
+    dividendYield = models.CharField(max_length=50, null=True)
+    trailingAnnualDividendYield = models.CharField(max_length=50, null=True)
+    fiveYearAvgDividendYield = models.CharField(max_length=50, null=True)
+    dividendRate = models.CharField(max_length=50, null=True)
+    trailingAnnualDividendRate = models.CharField(max_length=50, null=True)
+    lastDividendValue = models.CharField(max_length=50, null=True)
+
+    bookValue = models.CharField(max_length=50, null=True)
+    priceToBook = models.CharField(max_length=50, null=True)
+    enterpriseValue = models.CharField(max_length=50, null=True)
+
+    trailingPE = models.CharField(max_length=50, null=True)
+    forwardPE = models.CharField(max_length=50, null=True)
+    trailingEps = models.CharField(max_length=50, null=True)
+    forwardEps = models.CharField(max_length=50, null=True)
 
 
 class ExchangeRate(models.Model):
@@ -55,8 +72,6 @@ class CryptoUSD(models.Model):
     # 생성 및 마지막 수정 일시
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
-    # 엑세시용 (btc-usd)
-    ticker = models.CharField(max_length=50, null=True, unique=True)
     # BTC-USD
     symbol = models.CharField(max_length=50, null=True, unique=True)
 

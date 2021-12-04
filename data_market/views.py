@@ -51,39 +51,184 @@ def update_exchangerate(symbol):
 
 def data_tickersymbol(ticker):
     ## ticker 로 심볼 데이터 찾아서 있으면 트루 없으면 만들어서 트루 못만들면 폴스
-    ticker = ticker.lower()
-    symbol = TickerSymbol.objects.filter(ticker=ticker)
+    symbol = TickerSymbol.objects.filter(symbol=ticker)
     if len(symbol) == 1:
         return True
     elif len(symbol) == 0:
-    # 존재하는 symbol이라 가정하고 진행
+        # 존재하는 symbol이라 가정하고 진행
         try:
             # symbol모델로 데이터만들기
             ticker_check = yf.Ticker(ticker)
             info_check = ticker_check.info
-            tickersymbol = TickerSymbol.objects.create(
-                ticker=ticker,
-                symbol=info_check['symbol'],
-                shortName=info_check['shortName'],
-                longName=info_check['longName'],
-                currency=info_check['currency'],
-                financialCurrency=info_check['financialCurrency'],
-                country=info_check['country'],
-                market=info_check['market'],
-                exchange=info_check['exchange'],
-                marketCap=info_check['marketCap'],
-                dividendYield=info_check['dividendYield'],
-                trailingEps=info_check['trailingEps'],
-                beta=info_check['beta'],
-                currentPrice=info_check['currentPrice'],
-                previousClose=info_check['previousClose'],
-                regularMarketPreviousClose=info_check['regularMarketPreviousClose']
-            )
+
             try:
-                tickersymbol.trailingPE=info_check['trailingPE']
-                tickersymbol.save()
+                symbol = info_check['symbol']
             except:
-                pass
+                symbol = None
+            try:
+                quoteType = info_check['quoteType']
+            except:
+                quoteType = None
+            try:
+                legalType = info_check['legalType']
+            except:
+                legalType = None
+            try:
+                shortName = info_check['shortName']
+            except:
+                shortName = None
+            try:
+                longName = info_check['longName']
+            except:
+                longName = None
+            try:
+                currency = info_check['currency']
+            except:
+                currency = None
+            try:
+                financialCurrency = info_check['financialCurrency']
+            except:
+                financialCurrency = None
+            try:
+                country = info_check['country']
+            except:
+                country = None
+            try:
+                market = info_check['market']
+            except:
+                market = None
+            try:
+                exchange = info_check['exchange']
+            except:
+                exchange = None
+            try:
+                exchangeTimezoneName = info_check['exchangeTimezoneName']
+            except:
+                exchangeTimezoneName = None
+            try:
+                exchangeTimezoneShortName = info_check['exchangeTimezoneShortName']
+            except:
+                exchangeTimezoneShortName = None
+            try:
+                currentPrice = info_check['currentPrice']
+            except:
+                currentPrice = None
+            try:
+                previousClose = info_check['previousClose']
+            except:
+                previousClose = None
+            try:
+                regularMarketPrice = info_check['regularMarketPrice']
+            except:
+                regularMarketPrice = None
+            try:
+                regularMarketPreviousClose = info_check['regularMarketPreviousClose']
+            except:
+                regularMarketPreviousClose = None
+            try:
+                marketCap = info_check['marketCap']
+            except:
+                marketCap = None
+            try:
+                beta = info_check['beta']
+            except:
+                beta = None
+            try:
+                beta3Year = info_check['beta3Year']
+            except:
+                beta3Year = None
+            try:
+                _yield = info_check['yield']
+            except:
+                _yield = None
+            try:
+                dividendYield = info_check['dividendYield']
+            except:
+                dividendYield = None
+            try:
+                trailingAnnualDividendYield = info_check['trailingAnnualDividendYield']
+            except:
+                trailingAnnualDividendYield = None
+            try:
+                fiveYearAvgDividendYield = info_check['fiveYearAvgDividendYield']
+            except:
+                fiveYearAvgDividendYield = None
+            try:
+                dividendRate = info_check['dividendRate']
+            except:
+                dividendRate = None
+            try:
+                trailingAnnualDividendRate = info_check['trailingAnnualDividendRate']
+            except:
+                trailingAnnualDividendRate = None
+            try:
+                lastDividendValue = info_check['lastDividendValue']
+            except:
+                lastDividendValue = None
+            try:
+                bookValue = info_check['bookValue']
+            except:
+                bookValue = None
+            try:
+                priceToBook = info_check['priceToBook']
+            except:
+                priceToBook = None
+            try:
+                enterpriseValue = info_check['enterpriseValue']
+            except:
+                enterpriseValue = None
+            try:
+                trailingPE = info_check['trailingPE']
+            except:
+                trailingPE = None
+            try:
+                forwardPE = info_check['forwardPE']
+            except:
+                forwardPE = None
+            try:
+                trailingEps = info_check['trailingEps']
+            except:
+                trailingEps = None
+            try:
+                forwardEps = info_check['forwardEps']
+            except:
+                forwardEps = None
+
+            TickerSymbol.objects.create(
+                symbol=symbol,
+                quoteType=quoteType,
+                legalType=legalType,
+                shortName=shortName,
+                longName=longName,
+                currency=currency,
+                financialCurrency=financialCurrency,
+                country=country,
+                market=market,
+                exchange=exchange,
+                exchangeTimezoneName=exchangeTimezoneName,
+                exchangeTimezoneShortName=exchangeTimezoneShortName,
+                currentPrice=currentPrice,
+                previousClose=previousClose,
+                regularMarketPrice=regularMarketPrice,
+                regularMarketPreviousClose=regularMarketPreviousClose,
+                marketCap=marketCap,
+                beta=beta,
+                beta3Year=beta3Year,
+                _yield=_yield,
+                dividendYield=dividendYield,
+                trailingAnnualDividendYield=trailingAnnualDividendYield,
+                fiveYearAvgDividendYield=fiveYearAvgDividendYield,
+                dividendRate=dividendRate,
+                trailingAnnualDividendRate=trailingAnnualDividendRate,
+                lastDividendValue=lastDividendValue,
+                bookValue=bookValue,
+                priceToBook=priceToBook,
+                enterpriseValue=enterpriseValue,
+                trailingPE=trailingPE,
+                forwardPE=forwardPE,
+                trailingEps=trailingEps,
+                forwardEps=forwardEps
+            )
         # 만약에 오류뜨면
         except:
             return False
@@ -92,8 +237,7 @@ def data_tickersymbol(ticker):
 
 def data_cryptousd(ticker):
     ## ticker 로 심볼 데이터 찾아서 있으면 트루 없으면 만들어서 트루 못만들면 폴스
-    ticker.lower()
-    symbol = CryptoUSD.objects.filter(ticker=ticker)
+    symbol = CryptoUSD.objects.filter(symbol=ticker)
     if len(symbol) == 1:
         return True
     elif len(symbol) == 0:
@@ -103,7 +247,6 @@ def data_cryptousd(ticker):
             ticker_check = yf.Ticker(ticker)
             info_check = ticker_check.info
             CryptoUSD.objects.create(
-                ticker=ticker,
                 symbol=info_check['symbol'],
                 name=info_check['name'],
                 shortName=info_check['shortName'],
@@ -125,7 +268,7 @@ def update_cryptousd(ticker):
     try:
         ticker_check = yf.Ticker(ticker)
         info_check = ticker_check.info
-        cryptousd = CryptoUSD.objects.get(ticker=ticker)
+        cryptousd = CryptoUSD.objects.get(symbol=ticker)
         # cryptousd.symbol=info_check['symbol'],
         # cryptousd.name=info_check['name'],
         # cryptousd.shortName=info_check['shortName'],
@@ -148,42 +291,194 @@ def update_tickersymbol(ticker):
     try:
         ticker_check = yf.Ticker(ticker)
         info_check = ticker_check.info
-        tickersymbol = TickerSymbol.objects.get(ticker=ticker)
-        # tickersymbol.symbol=info_check['symbol']
-        tickersymbol.shortName=info_check['shortName']
-        tickersymbol.longName=info_check['longName']
-        # tickersymbol.currency=info_check['currency']
-        # tickersymbol.financialCurrency=info_check['financialCurrency']
-        tickersymbol.country=info_check['country']
-        # tickersymbol.market=info_check['market']
-        # tickersymbol.exchange=info_check['exchange']
-        tickersymbol.marketCap=info_check['marketCap']
-        tickersymbol.dividendYield=info_check['dividendYield']
-        tickersymbol.trailingEps=info_check['trailingEps']
-        tickersymbol.beta=info_check['beta']
-        tickersymbol.currentPrice=info_check['currentPrice']
-        tickersymbol.previousClose=info_check['previousClose']
-        tickersymbol.regularMarketPreviousClose=info_check['regularMarketPreviousClose']
-        tickersymbol.save()
+        tickersymbol = TickerSymbol.objects.get(symbol=ticker)
+
         try:
-            tickersymbol.trailingPE=info_check['trailingPE']
-            tickersymbol.save()
+            symbol = info_check['symbol']
         except:
-            pass
+            symbol = None
+        try:
+            quoteType = info_check['quoteType']
+        except:
+            quoteType = None
+        try:
+            legalType = info_check['legalType']
+        except:
+            legalType = None
+        try:
+            shortName = info_check['shortName']
+        except:
+            shortName = None
+        try:
+            longName = info_check['longName']
+        except:
+            longName = None
+        try:
+            currency = info_check['currency']
+        except:
+            currency = None
+        try:
+            financialCurrency = info_check['financialCurrency']
+        except:
+            financialCurrency = None
+        try:
+            country = info_check['country']
+        except:
+            country = None
+        try:
+            market = info_check['market']
+        except:
+            market = None
+        try:
+            exchange = info_check['exchange']
+        except:
+            exchange = None
+        try:
+            exchangeTimezoneName = info_check['exchangeTimezoneName']
+        except:
+            exchangeTimezoneName = None
+        try:
+            exchangeTimezoneShortName = info_check['exchangeTimezoneShortName']
+        except:
+            exchangeTimezoneShortName = None
+        try:
+            currentPrice = info_check['currentPrice']
+        except:
+            currentPrice = None
+        try:
+            previousClose = info_check['previousClose']
+        except:
+            previousClose = None
+        try:
+            regularMarketPrice = info_check['regularMarketPrice']
+        except:
+            regularMarketPrice = None
+        try:
+            regularMarketPreviousClose = info_check['regularMarketPreviousClose']
+        except:
+            regularMarketPreviousClose = None
+        try:
+            marketCap = info_check['marketCap']
+        except:
+            marketCap = None
+        try:
+            beta = info_check['beta']
+        except:
+            beta = None
+        try:
+            beta3Year = info_check['beta3Year']
+        except:
+            beta3Year = None
+        try:
+            _yield = info_check['yield']
+        except:
+            _yield = None
+        try:
+            dividendYield = info_check['dividendYield']
+        except:
+            dividendYield = None
+        try:
+            trailingAnnualDividendYield = info_check['trailingAnnualDividendYield']
+        except:
+            trailingAnnualDividendYield = None
+        try:
+            fiveYearAvgDividendYield = info_check['fiveYearAvgDividendYield']
+        except:
+            fiveYearAvgDividendYield = None
+        try:
+            dividendRate = info_check['dividendRate']
+        except:
+            dividendRate = None
+        try:
+            trailingAnnualDividendRate = info_check['trailingAnnualDividendRate']
+        except:
+            trailingAnnualDividendRate = None
+        try:
+            lastDividendValue = info_check['lastDividendValue']
+        except:
+            lastDividendValue = None
+        try:
+            bookValue = info_check['bookValue']
+        except:
+            bookValue = None
+        try:
+            priceToBook = info_check['priceToBook']
+        except:
+            priceToBook = None
+        try:
+            enterpriseValue = info_check['enterpriseValue']
+        except:
+            enterpriseValue = None
+        try:
+            trailingPE = info_check['trailingPE']
+        except:
+            trailingPE = None
+        try:
+            forwardPE = info_check['forwardPE']
+        except:
+            forwardPE = None
+        try:
+            trailingEps = info_check['trailingEps']
+        except:
+            trailingEps = None
+        try:
+            forwardEps = info_check['forwardEps']
+        except:
+            forwardEps = None
+
+        tickersymbol.symbol=symbol
+        tickersymbol.quoteType=quoteType
+        tickersymbol.legalType=legalType
+        tickersymbol.shortName=shortName
+        tickersymbol.longName=longName
+        tickersymbol.currency=currency
+        tickersymbol.financialCurrency=financialCurrency
+        tickersymbol.country=country
+        tickersymbol.market=market
+        tickersymbol.exchange=exchange
+        tickersymbol.exchangeTimezoneName=exchangeTimezoneName
+        tickersymbol.exchangeTimezoneShortName=exchangeTimezoneShortName
+        tickersymbol.currentPrice=currentPrice
+        tickersymbol.previousClose=previousClose
+        tickersymbol.regularMarketPrice=regularMarketPrice
+        tickersymbol.regularMarketPreviousClose=regularMarketPreviousClose
+        tickersymbol.marketCap=marketCap
+        tickersymbol.beta=beta
+        tickersymbol.beta3Year=beta3Year
+        tickersymbol._yield=_yield
+        tickersymbol.dividendYield=dividendYield
+        tickersymbol.trailingAnnualDividendYield=trailingAnnualDividendYield
+        tickersymbol.fiveYearAvgDividendYield=fiveYearAvgDividendYield
+        tickersymbol.dividendRate=dividendRate
+        tickersymbol.trailingAnnualDividendRate=trailingAnnualDividendRate
+        tickersymbol.lastDividendValue=lastDividendValue
+        tickersymbol.bookValue=bookValue
+        tickersymbol.priceToBook=priceToBook
+        tickersymbol.enterpriseValue=enterpriseValue
+        tickersymbol.trailingPE=trailingPE
+        tickersymbol.forwardPE=forwardPE
+        tickersymbol.trailingEps=trailingEps
+        tickersymbol.forwardEps=forwardEps
+        tickersymbol.save()
+
     # 만약에 오류뜨면
     except:
         return False
+
     return True
 
 def update_price(ticker):
     try:
         ticker_check = yf.Ticker(ticker)
         history_check = ticker_check.history(period="1d")
-        print(history_check)
-        print(history_check['Close'].values[0])
-        history_check['Close'].values[0]
+        price = history_check['Close'].values[0]
+
+        tickersymbol = TickerSymbol.objects.get(symbol=ticker)
+        tickersymbol.regularMarketPrice=price
+        tickersymbol.save()
     except:
         return False
+
     return True
 
 
@@ -193,7 +488,7 @@ def update(request):
     exchangerates = ExchangeRate.objects.all()
     if request.method == "POST" and request.POST['option'] == "a":
         ticker = request.POST['ticker']
-        ticker = ticker.lower()
+        ticker = ticker.upper()
         is_update = update_tickersymbol(ticker)
         if is_update == True:
             context = {'result' : '성공'}
@@ -202,7 +497,7 @@ def update(request):
         return render(request, 'data_market/update.html', context)
     elif request.method == "POST" and request.POST['option'] == "b":
         ticker = request.POST['ticker']
-        ticker = ticker.lower()
+        ticker = ticker.upper()
         is_update = update_price(ticker)
         if is_update == True:
             context = {'result' : '성공'}
@@ -211,6 +506,7 @@ def update(request):
         return render(request, 'data_market/update.html', context)
     elif request.method == "POST" and request.POST['option'] == "c":
         ticker = request.POST['ticker']
+        ticker = ticker.upper()
         is_update = data_exchangerate(ticker)
         if is_update == True:
             context = {'result' : '성공'}
@@ -219,17 +515,17 @@ def update(request):
         return render(request, 'data_market/update.html', context)
     elif request.method == "POST" and request.POST['option'] == "d":
         for tickersymbol in tickersymbols:
-            ticker = tickersymbol.ticker
+            ticker = tickersymbol.symbol
             is_update = update_tickersymbol(ticker)
             if is_update == False:
-                break
-        if is_update == False:
-            context = {'result' : '실패'}
+                id = tickersymbol.id
+                context = {'result' : f'id:{id} 에서 실패'}
+                return render(request, 'data_market/update.html', context)
         context = {'result' : '성공'}
         return render(request, 'data_market/update.html', context)
     elif request.method == "POST" and request.POST['option'] == "e":
         for cryptousd in cryptousds:
-            ticker = cryptousd.ticker
+            ticker = cryptousd.symbol
             is_update = update_cryptousd(ticker)
             if is_update == False:
                 break
@@ -245,6 +541,16 @@ def update(request):
                 break
         if is_update == False:
             context = {'result' : '실패'}
+        context = {'result' : '성공'}
+        return render(request, 'data_market/update.html', context)
+    elif request.method == "POST" and request.POST['option'] == "g":
+        for tickersymbol in tickersymbols:
+            ticker = tickersymbol.symbol
+            is_update = update_price(ticker)
+            if is_update == False:
+                id = tickersymbol.id
+                context = {'result' : f'id:{id} 에서 실패'}
+                return render(request, 'data_market/update.html', context)
         context = {'result' : '성공'}
         return render(request, 'data_market/update.html', context)
     else:

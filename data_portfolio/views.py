@@ -147,7 +147,6 @@ def com_dataportfolio_market_preclose(dataportfolio):
         value_stockthing = 0
         for stockthing in stockthing_list:
             ticker = stockthing.symbol
-            ticker = ticker.lower()
             ### 적용할 환율 찾기
             if stockthing.currency == key_currency:
                 exchangerate = 1
@@ -165,7 +164,7 @@ def com_dataportfolio_market_preclose(dataportfolio):
                         exchangerate = ex.regularMarketPreviousClose
                     else:
                         return redirect('no exchange, please report us, then we`ll fix it immediately')
-            tickersymbol = TickerSymbol.objects.get(ticker=ticker)
+            tickersymbol = TickerSymbol.objects.get(symbol=ticker)
             value = stockthing.amount * float(tickersymbol.regularMarketPreviousClose) * exchangerate
             value_stockthing = value_stockthing + value
             chart_data = [stockthing.symbol, value]
