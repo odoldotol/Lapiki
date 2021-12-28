@@ -1,8 +1,9 @@
 from django.contrib import admin
 
-from .models import TickerSymbol, ExchangeRate
+from .models import TickerSymbol, ExchangeRate, CryptoUSD
 
 admin.site.register(ExchangeRate)
+admin.site.register(CryptoUSD)
 
 @admin.register(TickerSymbol)
 class TickerSymbolAdmin(admin.ModelAdmin):

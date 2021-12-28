@@ -193,8 +193,8 @@ def quickcreate1(request, id):
     if request.method == "POST" and request.POST['complete'] == "n":
         symbol = request.POST['symbol']
         symbol = symbol.upper()
-        if symbol[-4:] != '-usd':
-            symbol = symbol + '-usd'
+        if symbol[-4:] != '-USD':
+            symbol = symbol + '-USD'
         # 입력한 symbol 가져와서 CryptoUSD 만들어보기
         data_symbol = data_cryptousd(symbol)
         # 없고 못만들었으면

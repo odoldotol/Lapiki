@@ -194,6 +194,9 @@ def data_tickersymbol(ticker):
             except:
                 forwardEps = None
 
+            if quoteType != "ETF" and quoteType != "EQUITY":
+                return False
+
             TickerSymbol.objects.create(
                 symbol=symbol,
                 quoteType=quoteType,
@@ -246,9 +249,19 @@ def data_cryptousd(ticker):
             # symbol모델로 데이터만들기
             ticker_check = yf.Ticker(ticker)
             info_check = ticker_check.info
+
+            quoteType = info_check['quoteType']
+            if quoteType != "CRYPTOCURRENCY":
+                return False
+                
+            try:
+                name = info_check['name']
+            except:
+                name = None
+                
             CryptoUSD.objects.create(
                 symbol=info_check['symbol'],
-                name=info_check['name'],
+                name=name,
                 shortName=info_check['shortName'],
                 fromCurrency=info_check['fromCurrency'],
                 toCurrency=info_check['toCurrency'],
