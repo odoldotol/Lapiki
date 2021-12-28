@@ -11,3 +11,7 @@ select.form-control,input.form-control,input{
     background:#adadad;
     color:#000000;
 }
+
+* {
+    box-sizing: border-box;
+  }
