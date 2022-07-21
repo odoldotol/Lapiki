@@ -1,3 +1,14 @@
+/* ----레이아웃 리셋---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+/* ------------------------ */
+
 label,h1,li,div,a,p{
     color:#757575;
 }
@@ -11,7 +22,3 @@ select.form-control,input.form-control,input{
     background:#adadad;
     color:#000000;
 }
-
-* {
-    box-sizing: border-box;
-  }
